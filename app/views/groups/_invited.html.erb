@@ -1,0 +1,30 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th></th>
+      <th>name</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if @group.followeds.any? %>
+    <% invited = @group.followeds && !@group.followers %>
+      <% invited.each_with_index do |f, i| %>
+    <tr>
+      <th><%= i+1 %></th>
+      <td><%= f.name %></td>
+      <td></td>
+      <td></td>
+    </tr>
+      <% end %>
+    <% else %>
+    <tr>
+      <th>1</th>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

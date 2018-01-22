@@ -1,0 +1,7 @@
+file 'vendor/assets/images/jquery-selectbox/select-icons.png', 'https://select-box.googlecode.com/svn/trunk/select-icons.png'
+file 'vendor/assets/javascripts/jquery.selectbox.js', 'https://select-box.googlecode.com/svn/trunk/jquery.selectbox-0.2.js'
+file 'vendor/assets/stylesheets/jquery.selectbox.css.erb', 'https://select-box.googlecode.com/svn/trunk/jquery.selectbox.css' do |path|
+  rewrite(path) do |content|
+    content.gsub!("select-icons.png", "<%= asset_path('jquery-selectbox/select-icons.png') %>")
+  end
+end

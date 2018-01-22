@@ -1,0 +1,185 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+@import 'bootstrap-datetimepicker';
+@import "font-awesome";
+
+@mixin box_sizing {
+  -moz-box-sizing:    border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing:         border-box;
+}
+
+/*     universal     */
+body {
+    padding-top: 100px;
+    margin-bottom: 0px;
+}
+
+ul {
+  list-style:none;
+}
+
+.space {
+  margin-bottom: 10px;
+}
+
+.scale:hover{
+  -webkit-transform: scale(1.1);
+	-moz-transform: scale(1.1);
+	-ms-transform: scale(1.1);
+	-o-transform: scale(1.1);
+	transform: scale(1.1);
+	opacity: 0.7;
+}
+
+.white {
+  color: #fff;
+}
+
+.black {
+  color: #000;
+}
+
+.inline-block {
+  display: inline-block;
+  margin-left: 30px;
+  vertical-align: middle;
+}
+
+.inline-block-nm {
+  display: inline-block;
+}
+
+.float-right {
+  float: right;
+  margin-right: 30px;
+}
+
+/*     header     */
+#logo{
+  font-size: 3.2em;
+  width: 200px;
+  color: #fff;
+}
+
+@media screen and (max-width: 767px) {
+  #logo {
+    display: none;
+  }
+}
+
+.dropdown:hover > .dropdown-menu{
+  display: block;
+}
+
+.notification {
+  color: #fff;
+}
+
+
+
+
+/*    application.html    */
+.create-button{
+  position: fixed;
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+  top: 110px;
+  right: 35px;
+}
+
+.create-event-button{
+  right: 35px;
+}
+
+.create-group-button{
+  right: 100px;
+}
+
+
+
+/*     footer     */
+footer {
+    padding-top: 60px;
+    margin-top: 45px;
+    border-top: 1px solid #eaeaea;
+    color: #777;
+}
+
+
+footer a {
+  color: #555;
+}
+
+footer a:hover {
+  color: #222;
+}
+
+footer small {
+  float: left;
+}
+
+footer ul {
+  float: right;
+  list-style: none;
+}
+
+footer ul li {
+  float: left;
+  margin-left: 15px;
+}
+
+/*     form     */
+input, textarea, select, .uneditable-input {
+  border: 1px solid #bbb;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+
+
+
+/*     debugger     */
+.debug_dump {
+  clear: both;
+  float: left;
+  width: 100%;
+  margin-top: 45px;
+  @include box_sizing;
+}
+
+
+/*    partial    */
+.follow_form {
+  width: 80px;
+}
+
+
+/*    toppage    */
+.toppage-main {
+  margin-top: -50px;
+  height: 700px;
+  position: relative;
+  margin-bottom: 0;
+}
+
+
+.center{
+  position: absolute;
+  margin-top: 350px;
+  margin-left: 70px;
+  color: #000;
+  font-size: 48px;
+}
+
+
+
+/*    groups#show     */
+
+
+/*    users#show     */
+.user-name {
+  margin-right: 100px;
+  font-size: 1.6em;
+}

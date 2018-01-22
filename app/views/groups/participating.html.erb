@@ -1,0 +1,49 @@
+<div class="container">
+
+    <h1>Group</h1>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item active"><%= link_to "Participating groups", participating_path, class: "active" %></li>
+        <li class="nav-item"><%= link_to "Invited groups", invited_path %></li>
+        <!-- all groupsは後で消す。自分で作ったgroupをフォローする仕組みにしたら -->
+        <li class="nav-item"><%= link_to "my groups", user_groups_path(user_id: current_user.id) %></li>
+    </ul>
+
+    <h2>Participating groups</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th></th>
+          <th> group name</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if !@groups.empty? %>
+          <% @groups.each_with_index do |group, i| %>
+        <tr>
+          <th><%= i+1 %></th>
+          <td><%= link_to group.title, g_path(access_id: group.access_id) %></td>
+          <% if group.user == current_user %>
+            <td><%= link_to "edit", g_edit_path(access_id: group.access_id), remote: true%></td>
+            <td><%= link_to "delete", g_path(access_id: group.access_id) %></td>
+          <% else %>
+            <td></td>
+            <td></td>
+          <% end %>
+        </tr>
+          <% end %>
+        <% else %>
+        <tr>
+          <th>1</th>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+
+</div>

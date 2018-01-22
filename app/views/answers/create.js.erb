@@ -1,0 +1,9 @@
+<% logger.debug("statusは#{@status}") %>
+$("#form-modal").modal("hide")
+<% if @status == 'success' %>
+    console.log("success!")
+    $("#final-modal").modal("show")
+<% elsif @status == 'fail' %>
+    console.log("fail!")
+    $("#fail-modal").modal("show")
+<% end %>

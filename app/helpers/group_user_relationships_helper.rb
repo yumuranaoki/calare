@@ -1,0 +1,2 @@
+module GroupUserRelationshipsHelper
+end

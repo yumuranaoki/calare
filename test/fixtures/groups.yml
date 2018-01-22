@@ -1,0 +1,10 @@
+
+one:
+  title: MyString
+  content: MyText
+  starttime: <%= Time.now %>
+  endtime: <%= Time.now.since(10.hour) %>
+  timelength: 5
+  user: michael
+
+

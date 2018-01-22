@@ -1,0 +1,59 @@
+<!-- group編集のパーシャル -->
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h2 class="modal-title">edit group</h2>
+        </div>
+        <div class="modal-body">
+            <div class = 'container-fluid'>
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <%= form_for(@group, url: g_update_path(access_id: @group.access_id), html: {method: :patch}, remote: true) do |f| %>
+                            <%= f.label :title %>
+                            <%= f.text_field :title, value: @group.title %>
+
+                            <%= f.label :content %>
+                            <%= f.text_area :content, value: @group.content %>
+
+                            <%= f.label :starttime_of_day %>
+                            <%= f.select :starttime_of_day, @choice, {}, class: "form-control", value: @group.starttime_of_day, size: 5 %>
+
+                            <%= f.label :endtime_of_day %>
+                            <%= f.select :endtime_of_day, @choice, {}, class: "form-control", value: @group.endtime_of_day, size: 5 %>
+
+
+
+                            <%= f.label :starttime %>
+                            <div class='input-group date datepicker-form start-datepicker' style="margin-bottom: 10px;">
+                              <%= f.text_field :starttime, class: 'form-control', value: @group.starttime %>
+                              <span class="input-group-addon">
+                                <span class="fa fa-calendar"></span>
+                              </span>
+                            </div>
+
+                            <%= f.label :endtime %>
+                            <div class='input-group date datepicker-form end-datepicker' style="margin-bottom: 10px;">
+                              <%= f.text_field :endtime, class: 'form-control', value: @group.endtime %>
+                              <span class="input-group-addon">
+                                <span class="fa fa-calendar"></span>
+                              </span>
+                            </div>
+
+                            <%= f.label :timelength %>
+                            <%= f.number_field :timelength, value: @group.timelength %>
+
+                            <%= f.hidden_field :access_id, value: @group.access_id %>
+                            <%= f.hidden_field :finished, value: false %>
+
+                            <%= f.submit "edit group", class: "btn btn-primary" %>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">閉じる</button>
+        </div>
+    </div>
+</div>

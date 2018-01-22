@@ -1,0 +1,21 @@
+console.log("たしかにgroups/new.js.erbが呼ばれました")
+var date = new Date()
+console.log(date)
+$("#form-modal").html("<%= escape_javascript(render 'new') %>")
+$("#form-modal").modal("show")
+$('.datepicker-form').datetimepicker({
+  format : "YYYY/MM/DD",
+  useCurrent: false,
+  icons: {
+    previous: "fa fa-arrow-left",
+    next: "fa fa-arrow-right"
+  }
+});
+
+$('.datepicker-form').focus(function(){
+  $('.datepicker-dropdown').css("z-index", "1060");
+});
+
+$(".start-datepicker").on("dp.change", function (e) {
+  $('.end-datepicker').data("DateTimePicker").defaultDate(e.date);
+});

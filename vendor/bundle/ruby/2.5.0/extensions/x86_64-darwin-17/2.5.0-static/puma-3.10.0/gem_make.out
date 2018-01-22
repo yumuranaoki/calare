@@ -1,0 +1,21 @@
+current directory: /Users/naokiyumura/develop/rubyonrails/calare/calendar/vendor/bundle/ruby/2.5.0/gems/puma-3.10.0/ext/puma_http11
+/Users/naokiyumura/.rbenv/versions/2.5.0/bin/ruby -r ./siteconf20180107-91320-tzyg3p.rb extconf.rb
+checking for BIO_read() in -lcrypto... yes
+checking for SSL_CTX_new() in -lssl... yes
+checking for openssl/bio.h... yes
+creating Makefile
+
+current directory: /Users/naokiyumura/develop/rubyonrails/calare/calendar/vendor/bundle/ruby/2.5.0/gems/puma-3.10.0/ext/puma_http11
+make "DESTDIR=" clean
+
+current directory: /Users/naokiyumura/develop/rubyonrails/calare/calendar/vendor/bundle/ruby/2.5.0/gems/puma-3.10.0/ext/puma_http11
+make "DESTDIR="
+compiling http11_parser.c
+compiling io_buffer.c
+compiling mini_ssl.c
+compiling puma_http11.c
+linking shared-object puma/puma_http11.bundle
+
+current directory: /Users/naokiyumura/develop/rubyonrails/calare/calendar/vendor/bundle/ruby/2.5.0/gems/puma-3.10.0/ext/puma_http11
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 puma_http11.bundle ./.gem.20180107-91320-1tzbnmj/puma

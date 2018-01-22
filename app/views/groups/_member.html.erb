@@ -1,0 +1,59 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th></th>
+      <th>name</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if @group.followers.any? %>
+      <% @group.followers.each_with_index do |follower, i| %>
+        <tr>
+          <th><%= i+1 %></th>
+          <td><%= follower.name %></td>
+          <td>
+            <% if current_user.following?(follower) %>
+              <%= form_for(current_user.active_user_relations.find_by(user_followed_id: follower.id),
+                                                                      html: { method: :delete }) do |f| %>
+              <%= f.submit "★", class: "btn btn-primary" %>
+              <% end %>
+            <% elsif current_user == follower %>
+
+            <% else %>
+                <%= form_for(current_user.active_user_relations.build) do |f| %>
+                    <div><%= hidden_field_tag :user_followed_id, follower.id %></div>
+                    <%= f.submit "✫", class: "btn btn-primary"  %>
+                <% end %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+        <% if @group.comments.any? %>
+          <% @group.comments.each_with_index do |comment, k| %>
+            <tr>
+              <th><%= @group.followers.count + k + 1 %></th>
+              <td><%= comment.name %></td>
+              <td></td>
+            </tr>
+          <% end %>
+        <% end %>
+    <% else %>
+      <% if @group.comments.any? %>
+        <% @group.comments.each_with_index do |comment, k| %>
+          <tr>
+            <th><%= k + 1 %></th>
+            <td><%= comment.name %></td>
+            <td></td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <th>1</th>
+          <td></td>
+          <td></td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

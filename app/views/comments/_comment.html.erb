@@ -1,0 +1,42 @@
+<!-- comment作成のパーシャル -->
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h2 class="modal-title">create event</h2>
+        </div>
+        <div class="modal-body">
+            <div class = 'container-fluid'>
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <%= form_for(@comment, url: g_comments_path(access_id: @group.access_id), remote: true) do |f| %>
+
+                          <%= f.label :name %>
+                          <%= f.text_field :name %>
+
+                            <% @comment_num.times do |i| %>
+                            <%= f.fields_for :schedules do |s| %>
+
+                              <label><%= (@startday + i).strftime("%Y/%m/%d") %></label>
+                              <%= s.hidden_field :date, value: (@startday + i).strftime("%Y/%m/%d") %>
+                              <div class="radio radio-inlie">
+                                  <label style="font-size: 1.2em; margin-right: 10px;"><%= s.radio_button :result, "1" %>◯</label>
+                                  <label style="font-size: 1.2em; margin-right: 10px;"><%= s.radio_button :result, "2" %>△</label>
+                                  <label style="font-size: 1.2em;"><%= s.radio_button :result, "3" %>✗</label>
+                              </div>
+
+
+                            <% end %>
+                            <% end %>
+
+                          <%= f.submit "登録", class: "btn btn-primary" %>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">閉じる</button>
+        </div>
+    </div>
+</div>

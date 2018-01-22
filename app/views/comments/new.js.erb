@@ -1,0 +1,7 @@
+console.log("たしかにcomments#newが呼ばれました")
+$("#group-registration-multi").modal("hide")
+$('#group-registration-multi').on('hidden.bs.modal', function () {
+    $('body').addClass('modal-open');
+});
+$("#form-modal").html("<%= escape_javascript(render 'comment') %>")
+$("#form-modal").modal("show")

@@ -1,0 +1,22 @@
+<ul>
+  <% @event_list.items.each do |event| %>
+    <li>
+      <%= event.summary %>
+      <%= event.start.date_time %>
+      <%= event.end.date_time %>
+      
+    </li>
+  <% end %>
+</ul>
+
+
+
+<%= @googlecalendar_event %>
+
+<ul>
+<% @googlecalendar_event.each do |event| %>
+
+<li><%= event['title'] %></li>
+
+<% end %>
+</ul>

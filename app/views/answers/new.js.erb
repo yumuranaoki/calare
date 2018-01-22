@@ -1,0 +1,20 @@
+console.log("たしかにanswer#newが呼ばれました")
+$("#group-registration-two").modal("hide")
+$('#group-registration-two').on('hidden.bs.modal', function () {
+    $('body').addClass('modal-open');
+});
+$("#form-modal").html("<%= escape_javascript(render 'new') %>")
+$("#form-modal").modal("show")
+
+//二重のmodalをここに書く
+//選択肢がselectされたら一行伸びて、datetimeをchoiceできる
+var addLine = function(obj) {
+  var table = document.getElementById("tableopen");
+  var tr = obj.parentNode.parentNode.rowIndex;
+  var l = table.rows.length;
+  for (var i=1; i < (l / 2); i++) {
+    table.rows[2*i].style.display = "none";
+  };
+  var target = table.rows[tr+1];
+  target.style.display = "";
+}

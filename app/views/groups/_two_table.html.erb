@@ -1,0 +1,28 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>日時</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if !@result.empty? %>
+      <% @result.each do |n| %>
+        <tr>
+          <% if @starttime.since(n[0].hour).strftime("%Y") == Time.now.strftime("%Y") %>
+            <td><%= "#{@starttime.since(n[0].hour).strftime("%m/%d  %H:%M")}〜#{@starttime.since(n[1].hour).strftime("%H:%M")}" %></td>
+          <% else %>
+            <td><%= "#{@starttime.since(n[0].hour).strftime("%Y%m/%d  %H:%M")}〜#{@starttime.since(n[1].hour).strftime("%H:%M")}" %></td>
+          <% end %>
+
+          <td></td>
+          <td></td>
+        </tr>
+      <% end %>
+    <% else %>
+      <td></td>
+      <td></td>
+    <% end %>
+  </tbody>
+</table>

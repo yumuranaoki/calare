@@ -1,0 +1,83 @@
+<!-- 日程決定のパーシャル(_determine) -->
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h2 class="modal-title">最終調整してください</h2>
+        </div>
+        <div class="modal-body">
+            <div class = 'container-fluid'>
+              <h3><%= "目安の時間は#{@group.timelength}時間です" %></h3>
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <%= form_for(@answer, url: g_answers_path(access_id: @group.access_id), remote: true) do |f| %>
+
+                          <%= f.label :name %>
+                          <%= f.text_field :name %>
+
+                          <table id="tableopen" class="table">
+                            <thead>
+                              <tr>
+                                <th>日時</th>
+                                <th></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <% if !@result.empty? %>
+                                <% @result.each do |n| %>
+                                  <tr>
+                                    <% if @starttime.since(n[0].hour).strftime("%Y") == Time.now.strftime("%Y") %>
+                                      <td><%= "#{@starttime.since(n[0].hour).strftime("%m/%d  %H:%M")}〜#{@starttime.since(n[1].hour).strftime("%H:%M")}" %></td>
+                                    <% else %>
+                                      <td><%= "#{@starttime.since(n[0].hour).strftime("%Y%m/%d  %H:%M")}〜#{@starttime.since(n[1].hour).strftime("%H:%M")}" %></td>
+                                    <% end %>
+                                    <td><%= f.radio_button :determined_day, Date.strptime(@starttime.since(n[0].hour).to_s.split[0],'%Y-%m-%d'), onClick: "addLine(this)" %></td>
+                                  </tr>
+
+                                  <% startnumber = @starttime.since(n[0].hour).strftime("%H").to_i %>
+                                  <% startbool = ( @starttime.since(n[0].hour).strftime("%M") == "30" ) ? true : false %>
+                                  <% endnumber = @starttime.since(n[1].hour).strftime("%H").to_i %>
+                                  <% endbool = ( @starttime.since(n[1].hour).strftime("%M") == "30" ) ? true : false %>
+                                  <% @new_choice = [] %>
+                                  <% @choice.each do |c| %>
+                                    <% num = c.split(":")[0].to_i %>
+                                    <% if num >= startnumber && num <= endnumber %>
+                                      <% @new_choice << c %>
+                                    <% end %>
+                                  <% end %>
+
+                                  <% if startbool %>
+                                    <% @new_choice.shift %>
+                                  <% end %>
+
+                                  <% if !endbool %>
+                                    <% @new_choice.pop %>
+                                  <% end %>
+
+                                  <tr style="display:none;">
+                                    <td>
+                                      <%= f.select :determined_start, @new_choice, {}, class: "form-control", size: 3 %>
+                                    </td>
+                                    <td>
+                                      <%= f.select :determined_end, @new_choice, {}, class: "form-control", size: 3 %>
+                                    </td>
+                                  </tr>
+                                <% end %>
+                              <% else %>
+                                調整可能な日程がありませんでした。
+                              <% end %>
+                            </tbody>
+                          </table>
+
+                          <%= f.submit "決定", class: "btn btn-primary" %>
+                        <% end %>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">閉じる</button>
+        </div>
+    </div>
+</div>

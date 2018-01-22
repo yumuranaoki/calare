@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= full_title(yield(:title)) %></title>
+    <%= csrf_meta_tags %>
+    <%= include_gon %>
+    <%= stylesheet_link_tag    'application', media: 'all',
+                               'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application',
+                               'data-turbolinks-track': 'reload' %>
+    <%= render 'layouts/shim' %>
+  </head>
+  <body>
+    <%= render 'layouts/header' %>
+
+      <div class="container">
+        <% flash.each do |message_type, message| %>
+          <div class = "alert alert-<%= message_type %>"><%= message %></div>
+        <% end %>
+      </div>
+
+      <!-- ajaxでjs.erbを呼ぶためのリンク -->
+      <!-- アイコンは変更する -->
+      <% if logged_in? && !current_page?(controller: 'static_pages', action: 'home') %>
+        <%= link_to new_user_group_path(user_id: current_user.id), class: "create-button create-group-button", remote: true do %>
+          <%= fa_icon("users 3x", class: "scale black") %>
+        <% end %>
+        <%= link_to new_user_event_path(user_id: current_user.id), class: "create-button create-event-button", remote: true do %>
+          <%= fa_icon("calendar-plus-o 3x", class: "scale black") %>
+        <% end %>
+      <% end %>
+
+      <%= yield %>
+
+      <!-- ここにmodelのタグを表示 -->
+      <div id="form-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+      <!-- 成功or失敗のモーダル -->
+      <%= render 'shared/modal' %>
+
+
+      <%= render 'layouts/footer' %>
+      <%= debug(params) if Rails.env.development? %>
+
+  </body>
+</html>
