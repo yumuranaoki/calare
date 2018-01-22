@@ -18,4 +18,5 @@
 //= require moment/ja.js
 //= require fullcalendar
 //= require bootstrap-datetimepicker
+//= require clipboard/dist/clipboard
 //= require_tree .

@@ -40,9 +40,10 @@
       <% end %>
 
     <!-- line、messangerなどで送りたい -->
-    <input type="hidden" id="url" value="<%= request.url %>" >
-    <button class="btn btn-primary inline-block-nm" onclick="clipboadCopy()">linkをコピー</button>
+    <button id="tooltip-button" class="btn btn-primary inline-block-nm copy-btn" data-clipboard-target="#url"　data-toggle="tooltip" title="コピーされました">linkをコピー</button>
     <!-- button end -->
+    <div style="width: 450px;"></div>
+    <input id="url" class="copy-box" value="<%= request.url %>">
 
 
     <!-- 1. multi -->

@@ -1,5 +1,7 @@
 {
-  "name": "calendar_app",
+  "name": "calare",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "clipboard": "^1.7.1"
+  }
 }
