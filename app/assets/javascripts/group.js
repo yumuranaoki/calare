@@ -1,13 +1,3 @@
-$(function(){
-  if (true){
-    if (gon.multi == true) {
-      $("#group-registration-multi").modal("show")
-    } else {
-      $("#group-registration-two").modal("show")
-    }
-  }
-});
-
 $(function () {
   var clipboard = new Clipboard('.copy-btn');
   clipboard.on('success', function(e){
