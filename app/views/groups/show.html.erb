@@ -29,8 +29,8 @@
       <!-- ２人での調整 -->
       <% else %>
 
-        <!-- 日程調整が完了していない場合 -->
-        <% if !@group.finished %>
+        <!-- 日程調整が完了していない場合 もしくはグループ作成者じゃない -->
+        <% if !(@group.finished || @group.user == current_user) %>
 
           <%= link_to g_answer_path(access_id: @group.access_id), remote: true do %>
             <button class="btn btn-primary inline-block-nm">日程調整をする</button>
