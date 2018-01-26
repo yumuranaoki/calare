@@ -39,8 +39,8 @@ Rails.application.routes.draw do
   resources :relationships, only:[:create, :destroy, :show]
   resources :user_relations, only:[:create, :destroy, :show]
 
-  get 'redirect', to: 'google_calendars#redirect', as: 'redirect'
-  get 'callback', to: 'google_calendars#callback', as: 'callback'
+  get '/redirect', to: 'google_calendars#redirect', as: 'redirect'
+  get '/callback', to: 'google_calendars#callback', as: 'callback'
   get '/list_all', to: 'google_calendars#list_all', as: 'list_all'
   get '/list_part', to: 'google_calendars#list_part', as: 'list_part'
 
