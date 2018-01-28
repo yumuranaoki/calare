@@ -1,7 +1,24 @@
 {
   "name": "calare",
+  "scripts": {
+    "start": "bin/rails s & bin/webpack-dev-server"
+  },
   "private": true,
   "dependencies": {
-    "clipboard": "^1.7.1"
+    "@rails/webpacker": "^3.2.1",
+    "aphrodite": "^1.2.5",
+    "babel-preset-react": "^6.24.1",
+    "clipboard": "^1.7.1",
+    "material-ui": "^0.20.0",
+    "prop-types": "^15.6.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-redux": "^5.0.6",
+    "react-tap-event-plugin": "^3.0.2",
+    "redux": "^3.7.2"
+  },
+  "devDependencies": {
+    "redux-devtools": "^3.4.1",
+    "webpack-dev-server": "^2.11.1"
   }
 }
