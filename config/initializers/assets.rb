@@ -18,3 +18,5 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 Rails.application.config.assets.precompile += %w( calendar.js )
 #datetimepicker.jsを追加するためのコード
 Rails.application.config.assets.precompile += %w( datetimepicker.js )
+#group.jsを追加するためのコード
+Rails.application.config.assets.precompile += %w( group.js )
