@@ -1,0 +1,1 @@
+$(function(){var o=new Clipboard(".copy-btn");o.on("success",function(o){o.clearSelection(),$("#tooltip-button").tooltip("show")}),o.on("error",function(o){o.clearSelection(),alert("\u30d6\u30e9\u30a6\u30b6\u304c\u5bfe\u5fdc\u3057\u3066\u304a\u308a\u307e\u305b\u3093")})});
