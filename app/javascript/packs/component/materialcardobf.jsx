@@ -1,6 +1,7 @@
 import React from 'react';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {StyleSheet, css} from 'aphrodite';
+import TimePicker from 'material-ui/TimePicker';
 
 class MaterialCard extends React.Component {
   render(){
@@ -18,6 +19,10 @@ class MaterialCard extends React.Component {
           Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
           Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
           Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
+          <TimePicker
+            hintText="12hr Format"
+            minutesStep={5}
+          />
         </CardText>
       </Card>
     );

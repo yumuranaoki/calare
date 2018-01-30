@@ -1,6 +1,6 @@
 import React from 'react'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import MaterialFloatingActionButton from './materialfloatingactionbutton';
+import MaterialFloatingActionButton from './materialfloatingactionbuttonobf';
 
 class OpenButton extends React.Component {
   render() {

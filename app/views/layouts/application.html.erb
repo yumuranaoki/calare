@@ -31,7 +31,10 @@
         <% end %>
       <% end %>
 
-      <%= yield %>
+      <div class="container grey">
+        <%= yield %>
+        <%= render 'layouts/footer' %>
+      </div>
 
       <!-- ここにmodelのタグを表示 -->
       <div id="form-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
@@ -39,9 +42,6 @@
       <!-- 成功or失敗のモーダル -->
       <%= render 'shared/modal' %>
 
-
-      <%= render 'layouts/footer' %>
-      <%= debug(params) if Rails.env.development? %>
 
   </body>
 </html>

@@ -84,7 +84,21 @@ $(document).ready(function() {
       header: {
         left: 'prev,next today',
         center: 'title',
-        right: 'month,agendaWeek,agendaDay'
+        right: 'agendaWeek,month'
+      },
+      defaultView: 'agendaWeek',
+      allDayText: 'all day',
+      dayNamesShort: ['日', '月', '火', '水', '木', '金', '土'],
+      views: {
+        week: {
+          titleFormat: 'YYYY年M月'
+        },
+        month: {
+          titleFormat: 'YYYY年M月'
+        },
+        day: {
+          titleFormat: 'YYYY年M月D日'
+        }
       },
 
       eventClick: function(calEvent) {
