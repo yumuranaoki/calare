@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  starttime: 2018-01-31 15:49:01
+  endtime: 2018-01-31 15:49:01
+  submission: one
+
+two:
+  starttime: 2018-01-31 15:49:01
+  endtime: 2018-01-31 15:49:01
+  submission: two

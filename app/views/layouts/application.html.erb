@@ -9,6 +9,7 @@
                                'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application',
                                'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application' %>
     <%= render 'layouts/shim' %>
   </head>
   <body>
@@ -39,8 +40,11 @@
       <!-- ここにmodelのタグを表示 -->
       <div id="form-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 
+
       <!-- 成功or失敗のモーダル -->
       <%= render 'shared/modal' %>
+
+
 
 
   </body>

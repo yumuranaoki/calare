@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import OpenButtonForm from '../component/openbuttonform';
+import OpenButtonForm from '../component/openbuttonform/openbuttonform';
 import { clickOpen } from '../action/openbuttonform';
 
 function mapStateToProps(state) {

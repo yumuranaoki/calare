@@ -18,7 +18,7 @@ Rails.application.routes.draw do
       get :following, :followers
     end
     resources :events
-    resources :groups, except:[:show, :edit, :destroy] do
+    resources :groups, except:[:show, :edit, :destroy, :index] do
       resources :group_user_relationships, only:[:create, :destroy, :show]
     end
   end
@@ -34,6 +34,7 @@ Rails.application.routes.draw do
   post '/g/:access_id/answer/comments', to: 'answers#create', as: 'g_answers'
   get '/participating', to: 'groups#participating'
   get '/invited', to: 'groups#invited'
+  get '/groups', to: 'groups#index', as: 'group_index'
 
 
   resources :relationships, only:[:create, :destroy, :show]
@@ -48,10 +49,14 @@ Rails.application.routes.draw do
   post '/createevent', to: 'events#create_event'
   patch '/editevent', to: 'events#edit_event'
 
+  post '/submit', to: 'submissions#create' 
+
   resources :account_activations, only:[:edit]
   resources :password_resets, only:[:new, :edit, :update, :create]
 
+  #reactのtest用
   get '/react', to: 'static_pages#react'
+
 
   root 'static_pages#home'
 end

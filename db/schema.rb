@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180121161739) do
+ActiveRecord::Schema.define(version: 20180131084119) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,15 @@ ActiveRecord::Schema.define(version: 20180121161739) do
     t.datetime "updated_at", null: false
     t.string "name"
     t.index ["group_id"], name: "index_comments_on_group_id"
+  end
+
+  create_table "detail_dates", force: :cascade do |t|
+    t.time "starttime"
+    t.time "endtime"
+    t.bigint "submission_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["submission_id"], name: "index_detail_dates_on_submission_id"
   end
 
   create_table "events", force: :cascade do |t|
@@ -122,6 +131,15 @@ ActiveRecord::Schema.define(version: 20180121161739) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "submissions", force: :cascade do |t|
+    t.boolean "determined", default: false
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "is_first", default: true
+    t.index ["user_id"], name: "index_submissions_on_user_id"
+  end
+
   create_table "user_relations", force: :cascade do |t|
     t.integer "user_follower_id"
     t.integer "user_followed_id"
@@ -146,10 +164,12 @@ ActiveRecord::Schema.define(version: 20180121161739) do
 
   add_foreign_key "answers", "groups"
   add_foreign_key "comments", "groups"
+  add_foreign_key "detail_dates", "submissions"
   add_foreign_key "events", "users"
   add_foreign_key "google_calendars", "users"
   add_foreign_key "groups", "users"
   add_foreign_key "notifications", "answers"
   add_foreign_key "notifications", "users"
   add_foreign_key "schedules", "comments"
+  add_foreign_key "submissions", "users"
 end

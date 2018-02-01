@@ -1,13 +1,22 @@
-<!-- group#indexいらないかも -->
-<div class="container">
+<% if logged_in? %>
 
-    <h1>Group</h1>
+  <% provide(:title, current_user.name) %>
+
+  <div class = 'container' style="margin-bottom: 30px;" >
+
+    <div class = "row">
+      <div class = "col-sm-8 col-sm-offset-2">
+        <div id="calendar"></div>
+      </div>
+    </div>
+
+    <h2>Group</h1>
 
     <ul class="nav nav-tabs">
-        <li class="nav-item"><%= link_to "Participating groups", participating_path, class: "active" %></li>
+        <li class="nav-item"><%= link_to "Participating groups", participating_path %></li>
         <li class="nav-item"><%= link_to "Invited groups", invited_path %></li>
         <!-- all groupsは後で消す。自分で作ったgroupをフォローする仕組みにしたら -->
-        <li class="nav-item active"><%= link_to "my groups", user_groups_path(user_id: current_user.id) %></li>
+        <li class="nav-item active"><%= link_to "my groups", group_index_path %></li>
     </ul>
 
     <h2>my groups</h2>
@@ -29,6 +38,7 @@
           <td><%= link_to "edit", g_edit_path(access_id: group.access_id), remote: true%></td>
           <td><%= link_to "delete", g_path(access_id: group.access_id) %></td>
         </tr>
+          <% break if i+1 >= @groups.count %>
           <% end %>
         <% else %>
         <tr>
@@ -41,5 +51,85 @@
       </tbody>
     </table>
 
+  </div>
 
+<% elsif %>
+
+  <!-- 書き方を変える（before actionがいいかも） -->
+  <p>ログインしてください。</p>
+
+<% end %>
+
+<div class="modal fade" id="event-form-modal" tabindex="-1">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h2 class="modal-title">create group</h2>
+        </div>
+        <div class="modal-body">
+            <div class = 'container-fluid'>
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <%= form_for(@group, url: user_groups_path(user_id: current_user.id), remote: true) do |f| %>
+                            <%= f.label :title %>
+                            <%= f.text_field :title %>
+
+                            <%= f.label :content %>
+                            <%= f.text_area :content %>
+
+
+
+                            <%= f.label :starttime_of_day %>
+                            <%= f.select :starttime_of_day, @choice, {}, class: "form-control", size: 5 %>
+
+
+                            <%= f.label :endtime_of_day %>
+                            <%= f.select :endtime_of_day, @choice, {}, class: "form-control", size: 5 %>
+
+
+
+
+                            <%= f.label :starttime %>
+                            <div class='input-group date datepicker-form start-datepicker' style="margin-bottom: 10px;">
+                              <%= f.text_field :starttime, class: 'form-control' %>
+                              <span class="input-group-addon">
+                                <span class="fa fa-calendar"></span>
+                              </span>
+                            </div>
+
+                            <%= f.label :endtime %>
+                            <div class='input-group date datepicker-form end-datepicker' style="margin-bottom: 10px;">
+                              <%= f.text_field :endtime, class: 'form-control' %>
+                              <span class="input-group-addon">
+                                <span class="fa fa-calendar"></span>
+                              </span>
+                            </div>
+
+                            <%= f.label :timelength %>
+                            <%= f.number_field :timelength %>
+
+                          <div class="radio radio-inlie">
+                              <label style="font-size: 1.2em; margin-right: 10px;"><%= f.radio_button :multi, false %>２人</label>
+                              <label style="font-size: 1.2em;"><%= f.radio_button :multi, true %>３人以上</label>
+                          </div>
+
+
+                            <%= f.hidden_field :access_id, value: @access_id %>
+                            <%= f.hidden_field :finished, value: false %>
+
+
+                            <%= f.submit "Create group", class: "btn btn-primary" %>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">閉じる</button>
+        </div>
+    </div>
 </div>
+</div>
+
+<%= javascript_include_tag "calendar" %>

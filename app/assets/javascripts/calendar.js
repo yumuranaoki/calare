@@ -1,5 +1,9 @@
 path = location.pathname
 console.log(path)
+var array = [];
+var num = 0;
+console.log(num)
+console.log(array)
 
 $(document).ready(function() {
 
@@ -105,31 +109,32 @@ $(document).ready(function() {
         alert('Event: ' + calEvent.id);
         if ( confirm('are you sure to delete?') ) {
           $('#calendar').fullCalendar('removeEvents', calEvent.id );
-          delete_event(calEvent.id);
+          //delete_event(calEvent.id);
+          array[calEvent.id]=null;
+          console.log(array);
         }
       },
       selectable: true,
       selectHelper: true,
       select: function(start, end) {
-        var title = prompt('イベントを追加');
-        var l = 25;
-        var c = "abcdefghijklmnopqrstuv0123456789";
-        var cl = c.length;
-        var id = "";
-        for(var i=0; i<l; i++){
-        id += c[Math.floor(Math.random()*cl)];
-        }
-        var eventData;
-        if (title) {
+        if(gon.is_first){
+          alert("is_first = true");
+          //ここでsubmision.is_first=false postして反映される？
+          var eventData;
           eventData = {
-            title: title,
             start: start,
-            end: end
+            end: end,
+            id: num
           };
+          array.push(eventData);
+          var textInput;
+          console.log(array[num]['start']['_d']);
+          num ++;
           $('#calendar').fullCalendar('renderEvent', eventData, true);
           $('#calendar').fullCalendar('unselect');
-          create_event(title, start, end, id);
-        }
+        }else{
+          alert("is_first = false");
+        };
       },
       editable: true,
       eventResize: function(event) {
@@ -144,5 +149,39 @@ $(document).ready(function() {
       timezone: 'Asia/Tokyo',
       events: path + '/events.json'
     });
+
+    submit = function(arr){
+      $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+        var token;
+        if (!options.crossDomain) {
+          token = $('meta[name="csrf-token"]').attr('content');
+          if (token) {
+            return jqXHR.setRequestHeader('X-CSRF-Token', token);
+          }
+        }
+      });
+      $.ajax({
+        type: "post",
+        url: "/submit",
+        data: {
+          array: arr,
+        }
+      }).done(function(data){
+        alert("登録しました!");
+      }).fail(function(data){
+        alert("登録できませんでした。");
+      });
+    };
+
+    $("#submission").on("click", function(){
+      var newArray = [];
+      for (var i = 0; i < array.length; i++) {
+        if(array[i] !== null) newArray.push(array[i]);
+      }
+      alert(newArray.length);
+      submit(newArray);
+    });
+
+
 
 });
