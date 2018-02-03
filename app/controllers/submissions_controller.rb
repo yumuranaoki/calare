@@ -9,7 +9,8 @@ class SubmissionsController < ApplicationController
     elsif Rails.env.production?
       @link = 'https://calare.herokuapp.com//s/' + @access_id
     end
-    submission = current_user.submissions.create(access_id: @access_id)
+    @title = params[:title]
+    submission = current_user.submissions.create(title: @title, access_id: @access_id)
     #配列に突っ込む
     array = params[:array]
     number = ((array.length)/2 - 1)
@@ -42,6 +43,10 @@ class SubmissionsController < ApplicationController
 
   def show
     @submission = Submission.find_by(access_id: params[:access_id])
+  end
+
+  def destroy
+    Submission.find_by(access_id: params[:access_id]).destroy
   end
 
 end

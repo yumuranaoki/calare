@@ -1,6 +1,7 @@
 <% if @status == 'success' %>
   $("#form-modal").html("<%= escape_javascript(render 'link') %>")
-  $("#form-modal").modal("show")
+  $("#form-modal").modal("show");
+  $('.append').prepend('<tr><td>hot!</td><td><%= link_to @title, s_path(access_id: @access_id) %></td><td><%= link_to s_edit_path(access_id: @access_id), remote: true do%><button>edit</button><% end %></td><td><%= link_to s_path(access_id: @access_id), reomte: true do %><button>delete</button><% end %></td></tr>');
 <% elsif @status == 'fail' %>
   console.log("fail!")
   $("#fail-modal").modal("show")

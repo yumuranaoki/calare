@@ -25,19 +25,29 @@
     <table class="table">
       <thead>
         <tr>
+          <td></td>
           <th> group name</th>
           <th></th>
           <th></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="table_delete" class="append">
         <% if !(@groups.empty? && @submissions.empty?) %>
           <% if !@groups.empty? %>
           <% @groups.each_with_index do |group, i| %>
             <tr>
+              <td></td>
               <td><%= link_to group.title, g_path(access_id: group.access_id) %></td>
-              <td><%= link_to "edit", g_edit_path(access_id: group.access_id), remote: true%></td>
-              <td><%= link_to "delete", g_path(access_id: group.access_id) %></td>
+              <td>
+                <%= link_to g_edit_path(access_id: group.access_id), remote: true do %>
+                  <button>edit</button>
+                <% end %>
+              </td>
+              <td>
+                <%= link_to g_path(access_id: group.access_id), remote: true do %>
+                  <button onClick='deleteRow(this);'>delete</button>
+                <% end %>
+              </td>
             </tr>
             <% break if i >= @g_c %>
           <% end %>
@@ -45,15 +55,25 @@
           <% if !@submissions.empty? %>
           <% @submissions.each_with_index do |s, k| %>
             <tr>
-              <td><%= link_to s.access_id, s_path(access_id: s.access_id) %></td>
-              <td><%= link_to "edit", s_edit_path(access_id: s.access_id), remote: true%></td>
-              <td><%= link_to "delete", s_path(access_id: s.access_id) %></td>
+              <td></td>
+              <td><%= link_to s.title, s_path(access_id: s.access_id) %></td>
+              <td>
+                <%= link_to s_edit_path(access_id: s.access_id), remote: true do%>
+                  <button>edit</button>
+                <% end %>
+              </td>
+              <td>
+                <%= link_to s_path(access_id: s.access_id), method: :delete, remote: true do%>
+                  <button onClick='deleteRow(this);'>delete</button>
+                <% end %>
+              </td>
             </tr>
             <% break if k >= @s_c %>
           <% end %>
           <% end %>
         <% else %>
         <tr>
+          <td></td>
           <td></td>
           <td></td>
           <td></td>

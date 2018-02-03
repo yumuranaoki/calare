@@ -6,8 +6,6 @@ $(document).on('turbolinks:load', function(){
 
     var path = location.pathname;
     var path_next = path.split('/')[1];
-    console.log(path);
-    console.log(path_next);
 
     delete_event = function (id) {
       $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
@@ -212,7 +210,7 @@ $(document).on('turbolinks:load', function(){
     }
 
 
-    submit = function(arr){
+    submit = function(title, arr){
       $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
         var token;
         if (!options.crossDomain) {
@@ -226,6 +224,7 @@ $(document).on('turbolinks:load', function(){
         type: "post",
         url: "/submit",
         data: {
+          title: title,
           array: arr
         }
       }).done(function(data){
@@ -236,13 +235,14 @@ $(document).on('turbolinks:load', function(){
     };
 
     $("#submission").on("click", function(){
+      var title = prompt("title");
       var newArray = [];
       for (var i = 0; i < test.length; i++) {
         var tmp = test[i];
         if(tmp !== null) newArray.push(tmp);
       }
       console.log(newArray)
-      submit(newArray);
+      submit(title, newArray);
     });
 
 
