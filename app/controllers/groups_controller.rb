@@ -13,16 +13,6 @@ class GroupsController < ApplicationController
     convinient_group
   end
 
-  def participating
-    @groups = current_user.followeds
-    user_show
-  end
-
-  def invited
-    @groups = current_user.followers
-    user_show
-  end
-
   def new
     @group = current_user.groups.build
     @access_id = SecureRandom::urlsafe_base64(64)

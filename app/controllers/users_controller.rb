@@ -12,8 +12,11 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = User.find(params[:id])
+    @user = current_user
     @groups = @user.groups
+    @g_c = @groups.count - 1
+    @submissions = @user.submissions
+    @s_c = @submissions.count - 1
     user_show
   end
 
@@ -54,6 +57,17 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @users = @user.user_followers
   end
+
+  def participating
+    @groups = current_user.followeds
+    user_show
+  end
+
+  def invited
+    @groups = current_user.followers
+    user_show
+  end
+
 
 
 

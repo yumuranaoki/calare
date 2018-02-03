@@ -7,12 +7,6 @@ module UsersHelper
                               '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00', '23:30']
 
     @access_id = SecureRandom::urlsafe_base64(64)
-    
-    if !current_user.submissions.empty?
-      gon.is_first = current_user.submissions.last.is_first
-    else
-      gon.is_first = true
-    end
 
     if !current_user.google_calendars.empty?
       google_calendar = current_user.google_calendars.order(:id).first

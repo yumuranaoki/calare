@@ -1,0 +1,24 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h2 class="modal-title">Success!</h2>
+        </div>
+        <div class="modal-body">
+            <div class = 'container-fluid'>
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                      <input id="url" class="copy-box" value="<%= @link %>">
+                      <button id="tooltip-button" class="btn btn-primary inline-block-nm copy-btn" data-clipboard-target="#url"　data-toggle="tooltip" title="コピーされました">linkをコピー</button>
+                      <%= link_to s_path(access_id: @access_id) do %>
+                        <button>調整ページへ移動！</button>
+                      <% end %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">閉じる</button>
+        </div>
+    </div>
+</div>

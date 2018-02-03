@@ -7,16 +7,16 @@
     <div class = "row">
       <div class = "col-sm-8 col-sm-offset-2">
         <div id="calendar"></div>
+        <button id="submission">submit!</button>
       </div>
     </div>
 
     <h2>Group</h1>
 
     <ul class="nav nav-tabs">
+        <li class="nav-item"><%= link_to "my groups", you_path %></li>
         <li class="nav-item"><%= link_to "Participating groups", participating_path %></li>
-        <li class="nav-item"><%= link_to "Invited groups", invited_path %></li>
-        <!-- all groupsは後で消す。自分で作ったgroupをフォローする仕組みにしたら -->
-        <li class="nav-item active"><%= link_to "my groups", group_index_path %></li>
+        <li class="nav-item active"><%= link_to "Invited groups", invited_path %></li>
     </ul>
 
     <h2>my groups</h2>

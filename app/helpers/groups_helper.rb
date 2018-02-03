@@ -1,6 +1,5 @@
 module GroupsHelper
   def convinient_group
-    @users = current_user.user_followeds.search(params[:search])
     @group = Group.find_by(access_id: params[:access_id])
     #jsに情報を渡す
     gon.multi = @group.multi

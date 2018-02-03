@@ -17,8 +17,7 @@ class EventsController < ApplicationController
   end
 
   def index
-    user = User.find(params[:user_id])
-    events = user.events
+    events = current_user.events
     @modified_events = []
     events.each do |e|
       tmp_events = {'id': e.id,
@@ -28,12 +27,7 @@ class EventsController < ApplicationController
                     'calendar_id': e.calendar_id}
       @modified_events << tmp_events
     end
-    if user == current_user
-      render json: @modified_events
-    else
-      flash[:danger] = "Please log in."
-      redirect_to login_url
-    end
+    render json: @modified_events
   end
 
   #google calendarにもつっこまないといけない

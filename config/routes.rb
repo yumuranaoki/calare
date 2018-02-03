@@ -13,11 +13,11 @@ Rails.application.routes.draw do
   delete '/logout', to: 'sessions#destroy'
 
 
-  resources :users, except:[:new, :create] do
+  resources :users, except:[:show, :new, :create] do
     member do
       get :following, :followers
     end
-    resources :events
+    resources :events, except:[:index]
     resources :groups, except:[:show, :edit, :destroy, :index] do
       resources :group_user_relationships, only:[:create, :destroy, :show]
     end
@@ -28,14 +28,26 @@ Rails.application.routes.draw do
   delete '/g/:access_id', to: 'groups#destroy', as: 'g_del'
   get '/g/:access_id/edit', to: 'groups#edit', as: 'g_edit'
   patch '/g/:access_id', to: 'groups#update', as: 'g_update'
+
   get '/g/:access_id/comments/new', to: 'comments#new', as: 'g_comment'
   post '/g/:access_id/comments/comments', to: 'comments#create', as: 'g_comments'
+
   get '/g/:access_id/answer/new', to: 'answers#new', as: 'g_answer'
   post '/g/:access_id/answer/comments', to: 'answers#create', as: 'g_answers'
-  get '/participating', to: 'groups#participating'
-  get '/invited', to: 'groups#invited'
-  get '/groups', to: 'groups#index', as: 'group_index'
 
+  get '/events', to: 'events#index'
+
+  get 'you', to: 'users#show', as: 'you'
+  get '/participating', to: 'users#participating'
+  get '/invited', to: 'users#invited'
+
+  get '/s/:access_id', to: 'submissions#show', as: 's'
+  #追加するここから
+  delete '/s/:access_id', to: 'submissions#destroy', as: 's_del'
+  get '/s/:access_id/edit', to: 'submissions#edit', as: 's_edit'
+  patch '/s/:access_id', to: 'submissions#update', as: 's_update'
+  #ここまで
+  get '/s/:access_id/d', to: 'detail_dates#index'
 
   resources :relationships, only:[:create, :destroy, :show]
   resources :user_relations, only:[:create, :destroy, :show]
@@ -49,7 +61,7 @@ Rails.application.routes.draw do
   post '/createevent', to: 'events#create_event'
   patch '/editevent', to: 'events#edit_event'
 
-  post '/submit', to: 'submissions#create' 
+  post '/submit', to: 'submissions#create'
 
   resources :account_activations, only:[:edit]
   resources :password_resets, only:[:new, :edit, :update, :create]

@@ -1,4 +1,4 @@
-$(function () {
+$(document).on('turbolinks:load', function () {
   var clipboard = new Clipboard('.copy-btn');
   clipboard.on('success', function(e){
     e.clearSelection();

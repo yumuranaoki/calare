@@ -1,0 +1,2 @@
+module DetailDatesHelper
+end

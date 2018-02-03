@@ -3,7 +3,7 @@
     <nav>
         <ul class="nav navbar-nav navbar-left">
           <% if logged_in? %>
-            <li><%= link_to "calare", user_path(id: current_user.id), id: "logo" %></li>
+            <li><%= link_to "calare", you_path, id: "logo" %></li>
           <% else %>
             <li><%= link_to "calare", root_path, id: "logo" %></li>
           <% end %>

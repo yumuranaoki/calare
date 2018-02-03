@@ -14,10 +14,9 @@
     <h2>Group</h1>
 
     <ul class="nav nav-tabs">
+        <li class="nav-item active"><%= link_to "my groups", you_path %></li>
         <li class="nav-item"><%= link_to "Participating groups", participating_path, class: "active" %></li>
         <li class="nav-item"><%= link_to "Invited groups", invited_path %></li>
-        <!-- all groupsは後で消す。自分で作ったgroupをフォローする仕組みにしたら -->
-        <li class="nav-item active"><%= link_to "my groups", group_index_path %></li>
     </ul>
 
 
@@ -26,26 +25,35 @@
     <table class="table">
       <thead>
         <tr>
-          <th></th>
           <th> group name</th>
           <th></th>
           <th></th>
         </tr>
       </thead>
       <tbody>
-        <% if !@groups.empty? %>
+        <% if !(@groups.empty? && @submissions.empty?) %>
+          <% if !@groups.empty? %>
           <% @groups.each_with_index do |group, i| %>
-        <tr>
-          <th><%= i+1 %></th>
-          <td><%= link_to group.title, g_path(access_id: group.access_id) %></td>
-          <td><%= link_to "edit", g_edit_path(access_id: group.access_id), remote: true%></td>
-          <td><%= link_to "delete", g_path(access_id: group.access_id) %></td>
-        </tr>
-          <% break if i+1 >= @groups.count %>
+            <tr>
+              <td><%= link_to group.title, g_path(access_id: group.access_id) %></td>
+              <td><%= link_to "edit", g_edit_path(access_id: group.access_id), remote: true%></td>
+              <td><%= link_to "delete", g_path(access_id: group.access_id) %></td>
+            </tr>
+            <% break if i >= @g_c %>
+          <% end %>
+          <% end %>
+          <% if !@submissions.empty? %>
+          <% @submissions.each_with_index do |s, k| %>
+            <tr>
+              <td><%= link_to s.access_id, s_path(access_id: s.access_id) %></td>
+              <td><%= link_to "edit", s_edit_path(access_id: s.access_id), remote: true%></td>
+              <td><%= link_to "delete", s_path(access_id: s.access_id) %></td>
+            </tr>
+            <% break if k >= @s_c %>
+          <% end %>
           <% end %>
         <% else %>
         <tr>
-          <th>1</th>
           <td></td>
           <td></td>
           <td></td>
@@ -134,5 +142,3 @@
     </div>
 </div>
 </div>
-
-<%= javascript_include_tag "calendar" %>

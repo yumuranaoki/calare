@@ -1,0 +1,19 @@
+<% if @status == 'success' %>
+  $("#form-modal").html("<%= escape_javascript(render 'link') %>")
+  $("#form-modal").modal("show")
+<% elsif @status == 'fail' %>
+  console.log("fail!")
+  $("#fail-modal").modal("show")
+<% end %>
+
+$(document).on('turbolinks:load', function () {
+  var clipboard = new Clipboard('.copy-btn');
+  clipboard.on('success', function(e){
+    e.clearSelection();
+    $('#tooltip-button').tooltip("show");
+  });
+  clipboard.on('error', function(e){
+    e.clearSelection();
+    alert("ブラウザが対応しておりません");
+  });
+});
