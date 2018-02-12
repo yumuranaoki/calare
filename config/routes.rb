@@ -42,11 +42,10 @@ Rails.application.routes.draw do
   get '/invited', to: 'users#invited'
 
   get '/s/:access_id', to: 'submissions#show', as: 's'
-  #追加するここから
   delete '/s/:access_id', to: 'submissions#destroy', as: 's_del'
-  get '/s/:access_id/edit', to: 'submissions#edit', as: 's_edit'
-  patch '/s/:access_id', to: 'submissions#update', as: 's_update'
-  #ここまで
+  post '/addfromsubmission', to: 'submissions#add_from_submission'
+  delete '/deletefromsubmission', to: 'submissions#delete_from_submission'
+  post '/determinedetaildate', to: 'submissions#determine_detaildate'
   get '/s/:access_id/d', to: 'detail_dates#index'
 
   resources :relationships, only:[:create, :destroy, :show]
