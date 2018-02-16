@@ -28,14 +28,14 @@ class Group < ApplicationRecord
     end
 
     def follow(other_user)
-        active_group_user_relationships.create(followed_id: other_user.id)
+      active_group_user_relationships.create(followed_id: other_user.id)
     end
 
     def unfollow(other_user)
-        active_group_user_relationships.find_by(followed_id: other_user.id).destroy
+      active_group_user_relationships.find_by(followed_id: other_user.id).destroy
     end
 
     def following?(other_user)
-        followeds.include?(other_user)
+      followeds.include?(other_user)
     end
 end

@@ -5,3 +5,21 @@
     <div id='calendar'></div>
   </div>
 </div>
+
+<% if !@submission.finished_flag && @submission.expired_flag %>
+  <p>締め切りました</p>
+<% end %>
+
+
+<% if @submission.finished_flag %>
+  <h2>決定した日時</h2>
+  <input id="submited" class="copy-box" value="<%= @determined_date %>">
+  <button id="tooltip-button" class="btn btn-primary copy-btn" data-clipboard-target="#submited" data-toggle="tooltip" title="コピーされました">日時をコピー</button>
+<% end %>
+
+<% if !@submission.expired_flag && @submission.more_than_two && @submission.user == current_user %>
+  <button class="btn btn-primary" id="expiration">締め切る</button>
+<% elsif !@submission.expired_flag && @submission.more_than_two && @submission.user != current_user %>
+  <button class="btn btn-primary" id="submit-detaildates">送信する</button>
+<% end %>
+<%= render 'shared/name' %>

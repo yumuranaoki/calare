@@ -46,6 +46,9 @@ Rails.application.routes.draw do
   post '/addfromsubmission', to: 'submissions#add_from_submission'
   delete '/deletefromsubmission', to: 'submissions#delete_from_submission'
   post '/determinedetaildate', to: 'submissions#determine_detaildate'
+  patch '/editsubmittedevent', to: 'submissions#edit_submitted_event'
+  post '/expire', to: 'submissions#expire'
+  post '/submitdetaildates', to: 'submissions#submit_detail_dates'
   get '/s/:access_id/d', to: 'detail_dates#index'
 
   resources :relationships, only:[:create, :destroy, :show]

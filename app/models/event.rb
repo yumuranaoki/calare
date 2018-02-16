@@ -8,8 +8,10 @@ class Event < ApplicationRecord
   validate :start_must_be_earlier_than_end
 
   def start_must_be_earlier_than_end
-    if startday >= endday
-      errors.add(:event, ": その日程は設定できません。")
+    if startday && endday
+      if startday >= endday
+        errors.add(:event, ": その日程は設定できません。")
+      end
     end
   end
 

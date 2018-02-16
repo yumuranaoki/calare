@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180203114941) do
+ActiveRecord::Schema.define(version: 20180215052038) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20180203114941) do
     t.datetime "updated_at", null: false
     t.datetime "starttime"
     t.datetime "endtime"
+    t.integer "counted", default: 0
     t.index ["submission_id"], name: "index_detail_dates_on_submission_id"
   end
 
@@ -131,12 +132,23 @@ ActiveRecord::Schema.define(version: 20180203114941) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "submission_relationships", force: :cascade do |t|
+    t.integer "follower_id"
+    t.integer "followed_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["follower_id", "followed_id"], name: "index_submission_relationships_on_follower_id_and_followed_id", unique: true
+  end
+
   create_table "submissions", force: :cascade do |t|
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "access_id"
     t.string "title"
+    t.boolean "more_than_two"
+    t.boolean "finished_flag", default: false
+    t.boolean "expired_flag", default: false
     t.index ["user_id"], name: "index_submissions_on_user_id"
   end
 

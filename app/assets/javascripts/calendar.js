@@ -3,12 +3,29 @@ var nump = 10000;
 var tmp_str = '';
 var test = [];
 
-
 $(document).on('turbolinks:load', function(){
 
     var path = location.pathname;
     var path_next = path.split('/')[1];
     var path_id = path.split('/')[2];
+
+    App.notification = App.cable.subscriptions.create({
+      channel: "NotificationChannel"
+    }, {
+      connected: function() {},
+      disconnected: function() {},
+      received: function(data) {
+        //通知のマークを出したい（reactかなー）
+        console.log(data)
+      },
+      speak: function(name, starttime, endtime) {
+        return this.perform('speak', {
+          name: name,
+          starttime: starttime,
+          endtime: endtime
+        })
+      }
+    })
 
 
     //function
@@ -140,7 +157,7 @@ $(document).on('turbolinks:load', function(){
       });
     }
 
-    determine = function(id, access_id, event_id) {
+    determine = function(id, access_id, event_id, memberFlag) {
       $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
         var token;
         if (!options.crossDomain) {
@@ -156,7 +173,8 @@ $(document).on('turbolinks:load', function(){
         data: {
           id: id,
           access_id: access_id,
-          event_id: event_id
+          event_id: event_id,  //google calendarに登録するためのid
+          memberFlag: memberFlag
         }
       }).done(function(data){
         alert("送信しました!");
@@ -164,6 +182,36 @@ $(document).on('turbolinks:load', function(){
         alert("送信できませんでした。");
       });
     }
+
+    edit_submitted_event = function(start, end, id, access_id) {
+      console.log("呼ばれた")
+      $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+        var token;
+        if (!options.crossDomain) {
+          token = $('meta[name="csrf-token"]').attr('content');
+          if (token) {
+            return jqXHR.setRequestHeader('X-CSRF-Token', token);
+          }
+        }
+      });
+      $.ajax({
+        type: "post",
+        url: "/editsubmittedevent",
+        data: {
+          starttime: start.toISOString(),
+          endtime: end.toISOString(),
+          id: id,
+          access_id: access_id,
+          _method: 'PATCH'
+        }
+      }).done(function(data){
+        alert("送信しました!");
+      }).fail(function(data){
+        alert("送信できませんでした。");
+      });
+    }
+
+
     //function
 
 
@@ -172,7 +220,6 @@ $(document).on('turbolinks:load', function(){
     //ページによる場合分け
     if (path == '/you' || path == '/participating' || path == '/invited' ){
       $('#calendar').fullCalendar({
-
         header: {
           left: 'prev,next today',
           center: 'title',
@@ -237,6 +284,37 @@ $(document).on('turbolinks:load', function(){
 
   //submissionのページで作成者
   }else if (path_next == 's' && gon.selfcreate) {
+    var memberFlag = gon.more_than_two
+    var finishedFlag = gon.finishedFlag
+    var expiredFlag = gon.expiredFlag
+    var submission_id = gon.submission_id
+
+    $("#expiration").on("click", function(){
+      if (confirm("本当に締め切りますか")) {
+        expiredFlag = true
+        $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+          var token;
+          if (!options.crossDomain) {
+            token = $('meta[name="csrf-token"]').attr('content');
+            if (token) {
+              return jqXHR.setRequestHeader('X-CSRF-Token', token);
+            }
+          }
+        });
+        $.ajax({
+          type: "post",
+          url: "/expire",
+          data: {
+            submission_id: gon.submission_id,
+          }
+        }).done(function(data){
+          ;
+        }).fail(function(data){
+          ;
+        });
+      }
+    })
+
       $('#calendar').fullCalendar({
         header: {
           left: 'prev,next today',
@@ -258,15 +336,28 @@ $(document).on('turbolinks:load', function(){
           }
         },
 
-        //ここで削除する
         eventClick: function(calEvent) {
-          if ( confirm('are you sure to delete?') ) {
-            $('#calendar').fullCalendar('removeEvents', calEvent.id );
-            //DBからも消す
-            delete_from_submission(calEvent.id, path_id);
+          //締め切っているかどうか
+          console.log(expiredFlag)
+          if (expiredFlag && memberFlag && !finishedFlag) {
+            //締め切っていて複数人向けのグループなら、作成者のクリックで決定
+            if (confirm('are you sure to pick this')) {
+              calEvent.color = "rgb(214, 76, 97)"
+              $('#calendar').fullCalendar('updateEvent', calEvent);
+              var l = 25;
+              var c = "abcdefghijklmnopqrstuv0123456789";
+              var cl = c.length;
+              var event_id = "";
+              for(var i=0; i<l; i++){
+              event_id += c[Math.floor(Math.random()*cl)];
+              }
+              App.notification.speak('作成者', calEvent.start, calEvent.end);
+              finishedFlag = true
+              determine(calEvent.id, path_id, event_id, memberFlag);
+            }
           }
         },
-        selectable: true,
+        selectable: false, //(!finishedFlag || !expiredFlag) ? true : false,
         selectHelper: true,
 
         //selectを新しい日程の提示に使う
@@ -289,10 +380,7 @@ $(document).on('turbolinks:load', function(){
           $('#calendar').fullCalendar('unselect');
           add_from_submission(start, end, id, path_id);
         },
-        editable: true,
-        //ここで日程を修正するようにする
-        eventResize: function(event) {
-        },
+        editable: false,
         navLinks: true,
         timeFormat: 'H:mm',
         slotLabelFormat: 'H:mm',
@@ -304,13 +392,47 @@ $(document).on('turbolinks:load', function(){
             },
             {
                  url: path + '/d.json',
-                 color: '#c0c0c0'
             }
        ]
       });
 
     //submissionページで招待者
     }else if(path_next == 's' && !gon.selfcreate){
+      var memberFlag = gon.more_than_two
+      var finishedFlag = gon.finishedFlag
+      var expiredFlag = gon.expiredFlag
+      var submission_id = gon.submission_id
+      var detail_dates_arr = gon.detail_dates_arr
+      var detail_dates_id_arr = gon.detail_dates_id_arr
+
+      $("#submit-detaildates").on("click", function(){
+        if (confirm("本当に送信しますか")) {
+          $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+            var token;
+            if (!options.crossDomain) {
+              token = $('meta[name="csrf-token"]').attr('content');
+              if (token) {
+                return jqXHR.setRequestHeader('X-CSRF-Token', token);
+              }
+            }
+          });
+          $.ajax({
+            type: "post",
+            url: "/submitdetaildates",
+            data: {
+              submission_id: submission_id,
+              data: detail_dates_arr
+            }
+          }).done(function(data){
+            ;
+          }).fail(function(data){
+            ;
+          });
+        }
+      })
+
+      console.log(detail_dates_arr)
+
       $('#calendar').fullCalendar({
         header: {
           left: 'prev,next today',
@@ -333,25 +455,51 @@ $(document).on('turbolinks:load', function(){
         },
 
         //ここで選択させる
+
         eventClick: function(calEvent) {
-          if ( confirm('are you sure to pick this?') ) {
-            var l = 25;
-            var c = "abcdefghijklmnopqrstuv0123456789";
-            var cl = c.length;
-            var event_id = "";
-            for(var i=0; i<l; i++){
-            event_id += c[Math.floor(Math.random()*cl)];
+          //２人ページ
+          if (!memberFlag) {
+            if ( confirm('are you sure to pick this?') ) {
+              $("#input-modal").modal("show");
+              $("#title-button").on("click", function(){
+                var name = $("#title-input").val();
+                $("#input-modal").modal("hide");
+                var l = 25;
+                var c = "abcdefghijklmnopqrstuv0123456789";
+                var cl = c.length;
+                var event_id = "";
+                for(var i=0; i<l; i++){
+                event_id += c[Math.floor(Math.random()*cl)];
+                }
+                App.notification.speak(name, calEvent.start, calEvent.end);
+                finishedFlag = true
+                console.log(finishedFlag)
+                determine(calEvent.id, path_id, event_id, memberFlag);
+            });
             }
-            //色を変える処理
-            determine(calEvent.id, path_id, event_id);
+          //締め切り前で複数
+          } else if (!expiredFlag && memberFlag) {
+            //clickでhashの配列を操作、毎回カレンダーのviewを変える
+            if (detail_dates_id_arr.includes(calEvent.id)) {
+              var selected_color;
+              for (var i in detail_dates_arr) {
+                if (detail_dates_arr[i]['id'] == calEvent.id) {
+                  detail_dates_arr[i]['selected'] = !detail_dates_arr[i]['selected']
+                  selected_bool = detail_dates_arr[i]['selected'];
+                }
+              }
+
+              calEvent.title = (selected_bool) ? calEvent.title + 1 : calEvent.title - 1,
+              calEvent.color = (selected_bool) ? "rgb(26, 211, 236)" : "#cecece"
+              $('#calendar').fullCalendar('updateEvent', calEvent);
+            }
           }
+
         },
-        selectable: true,
-        selectHelper: true,
-
-        //selectを新しい日程の提示に使う
+        selectable: false,
+        selectHelper: false,
+        //selectを新しい日程の提示に使う。（当面は一方向）
         select: function(start, end) {
-
         },
         navLinks: true,
         timeFormat: 'H:mm',
@@ -360,11 +508,10 @@ $(document).on('turbolinks:load', function(){
         eventSources: [
             {
                  url: "/events.json",
-                 color: '#000080',
+                 color: '#000080'
             },
             {
-                 url: path + '/d.json',
-                 color: '#c0c0c0'
+                 url: path + '/d.json'
             }
        ]
       });
@@ -375,7 +522,7 @@ $(document).on('turbolinks:load', function(){
 
 
     //submitに関する
-    submit = function(title, arr){
+    submit = function(title, arr, radioVal){
       $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
         var token;
         if (!options.crossDomain) {
@@ -390,7 +537,8 @@ $(document).on('turbolinks:load', function(){
         url: "/submit",
         data: {
           title: title,
-          array: arr
+          array: arr,
+          radio_val: radioVal
         }
       }).done(function(data){
         ;
@@ -400,8 +548,11 @@ $(document).on('turbolinks:load', function(){
     };
 
     $("#submission").on("click", function(){
+      var radioVal = $("input[name=member]:checked").val();
+      console.log(radioVal);
       $("#input-modal").modal("show");
       $("#title-button").on("click", function(){
+
         var title = $("#title-input").val();
         $("#input-modal").modal("hide");
         var newArray = [];
@@ -410,7 +561,7 @@ $(document).on('turbolinks:load', function(){
           if(tmp !== null) newArray.push(tmp);
         }
         console.log(newArray)
-        submit(title, newArray);
+        submit(title, newArray, radioVal);
       })
     });
 

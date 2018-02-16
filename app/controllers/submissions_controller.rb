@@ -10,7 +10,7 @@ class SubmissionsController < ApplicationController
       @link = 'https://calare.herokuapp.com//s/' + @access_id
     end
     @title = params[:title]
-    submission = current_user.submissions.create(title: @title, access_id: @access_id)
+    submission = current_user.submissions.create(title: @title, access_id: @access_id, more_than_two: params[:radio_val])
     #配列に突っ込む
     array = params[:array]
     number = ((array.length)/2 - 1)
@@ -43,8 +43,32 @@ class SubmissionsController < ApplicationController
 
   def show
     @submission = Submission.find_by(access_id: params[:access_id])
+    #ユーザーの情報をjsに送る
+    #作成者か招待者か
     gon.selfcreate = (current_user == @submission.user) ? true : false
+    #logginユーザー
     gon.logged_in = logged_in?
+    #２人ページ or 複数
+    gon.more_than_two = @submission.more_than_two
+    #調整が終了しているか
+    gon.finishedFlag = @submission.finished_flag
+    #締め切っているか
+    gon.expiredFlag = @submission.expired_flag
+    #submissionのid
+    gon.submission_id = @submission.id
+    #submissonのdetail_dateの取扱い
+    detail_dates_arr = []
+    detail_dates_id_arr = []
+    @submission.detail_dates.each do |d|
+      detail_dates_arr << {id: d.id, selected: false}
+      detail_dates_id_arr << d.id
+    end
+    gon.detail_dates_arr = detail_dates_arr
+    gon.detail_dates_id_arr = detail_dates_id_arr
+    if !@submission.followeds.empty?
+      @determined_date = "#{@submission.followeds.first.starttime.strftime("%m月%d日%H:%M")}〜#{@submission.followeds.first.endtime.strftime("%m月%d日%H:%M")}まで"
+    end
+    logger.debug("でばっぐ：#{Rails.application.secrets.google_client_id}")
   end
 
   def destroy
@@ -66,24 +90,38 @@ class SubmissionsController < ApplicationController
     logger.debug("DBから削除しました")
   end
 
+  def edit_submitted_event
+    submission = Submission.find_by(access_id: params[:access_id])
+    logger.debug("さぶみっしょんいｄは#{submission.id}")
+    logger.debug("さぶみっしょんいｄは#{params[:id]}")
+    detail_date = submission.detail_dates.find(params[:id])
+    detail_date.update(
+      starttime: params[:starttime],
+      endtime: params[:endtime]
+    )
+  end
+
   #calendarから招待者
   def determine_detaildate
     logger.debug('デバッグ：ポスト成功')
-=begin
+    logger.debug("ぱらむすメンバーフラッグ#{params[:memberFlag]}")
     submission = Submission.find_by(access_id: params[:access_id])
     detail_date = submission.detail_dates.find(params[:id])
     event_id = params[:event_id]
     parent_user = submission.user
+    logger.debug("作成者名は#{parent_user.name}")
+
     if !parent_user.google_calendars.empty?
-      google_calendar = parent_user.google_calendars.order(:id).first
-      refresh_token = google_calendar.refresh_token
+      logger.debug("作成者カレンダーありあらり")
+      parent_google_calendar = parent_user.google_calendars.order(:id).first
+      refresh_token = parent_google_calendar.refresh_token
       client = Signet::OAuth2::Client.new(client_options)
       client.update!(refresh_token: refresh_token)
       response = client.fetch_access_token!
       session[:authorization] = response
       google_calendar_event = Google::Apis::CalendarV3::Event.new(summary: submission.title,
-                                                                  start: {date_time: detail_date.startday.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
-                                                                end: {date_time: detail_date.endday.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
+                                                                  start: {date_time: detail_date.starttime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
+                                                                end: {date_time: detail_date.endtime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
                                                                   id: event_id)
       service = Google::Apis::CalendarV3::CalendarService.new
       service.authorization = client
@@ -91,23 +129,53 @@ class SubmissionsController < ApplicationController
     end
     #回答者がログインしている場合、回答者のカレンダーにもつっこむ
     if logged_in?
-      if !current_user.google_calendars.empty?
-        google_calendar = current_user.google_calendars.order(:id).first
-        refresh_token = google_calendar.refresh_token
-        client = Signet::OAuth2::Client.new(client_options)
-        client.update!(refresh_token: refresh_token)
-        response = client.fetch_access_token!
-        session[:authorization] = response
-        google_calendar_event = Google::Apis::CalendarV3::Event.new(summary: submission.title,
-                                                                    start: {date_time: detail_date.startday.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
-                                                                  end: {date_time: detail_date.endday.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
-                                                                    id: event_id)
-        service = Google::Apis::CalendarV3::CalendarService.new
-        service.authorization = client
-        service.insert_event("primary", google_calendar_event)
+      if parent_user != current_user
+        logger.debug("ログインはできます")
+        if !current_user.google_calendars.empty?
+          logger.debug("招待者カレンダーあります")
+          google_calendar = current_user.google_calendars.order(:id).first
+          refresh_token = google_calendar.refresh_token
+          client = Signet::OAuth2::Client.new(client_options)
+          client.update!(refresh_token: refresh_token)
+          response = client.fetch_access_token!
+          session[:authorization] = response
+          google_calendar_event = Google::Apis::CalendarV3::Event.new(summary: submission.title,
+                                                                      start: {date_time: detail_date.starttime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
+                                                                    end: {date_time: detail_date.endtime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
+                                                                      id: event_id)
+          service = Google::Apis::CalendarV3::CalendarService.new
+          service.authorization = client
+          service.insert_event("primary", google_calendar_event)
+        #普通にcurrent_user.eventにつっこむ
+        end
       end
     end
-=end
+    #２人向けのグループの場合ここで受付終了
+    logger.debug("でばっぐ：#{params[:memberFlag]}")
+    if params[:memberFlag] == 'true'
+      logger.debug("でばっぐ：#{params[:memberFlag]}")
+      submission.update(finished_flag: true)
+    end
+    #submissionと決定したdetail_datesを関連付け
+    submission.follow(detail_date)
+  end
+
+  def expire
+    submission = Submission.find(params[:submission_id])
+    submission.update(expired_flag: true)
+  end
+
+  def submit_detail_dates
+    submission = Submission.find(params[:submission_id])
+    detail_dates = submission.detail_dates
+    detail_dates_arr = params[:data]
+    logger.debug("でえばっぐ：#{detail_dates_arr}")
+    detail_dates_arr.each do |index, date|
+      if date['selected'] == "true"
+        selected_date = detail_dates.find(date['id'])
+        selected_date.update(counted: selected_date.counted + 1)
+      end
+    end
   end
 
   private
