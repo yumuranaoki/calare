@@ -50,6 +50,7 @@ Rails.application.routes.draw do
   post '/expire', to: 'submissions#expire'
   post '/submitdetaildates', to: 'submissions#submit_detail_dates'
   get '/s/:access_id/d', to: 'detail_dates#index'
+  get '/s/:access_id/da', to: 'detail_dates#index_for_auto'
 
   resources :relationships, only:[:create, :destroy, :show]
   resources :user_relations, only:[:create, :destroy, :show]

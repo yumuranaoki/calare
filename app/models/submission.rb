@@ -10,6 +10,11 @@ class Submission < ApplicationRecord
                                               dependent: :destroy
   has_many :followeds, through: :active_submission_relationships
 
+  has_many :passive_user_sub_relationships, class_name: "UserSubRelationship",
+                                                foreign_key: "followed_id",
+                                                dependent: :destroy
+  has_many :user_followers, through: :passive_user_sub_relationships, source: :follower
+
   def follow(detail_date)
     active_submission_relationships.create(followed_id: detail_date.id)
   end

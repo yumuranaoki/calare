@@ -1,25 +1,47 @@
 <h1><%= @submission.title %></h1>
 <h2 style="margin-bottom: 40px;">作成者: <%= @submission.user.name %></h2>
-<div class="container" style="margin-bottom: 150px;">
-  <div class="col-sm-8 col-sm-offset-2">
-    <div id='calendar'></div>
-  </div>
-</div>
+<% if @submission.more_than_two %>
+  <p>これは複数人向けのページです</p>
+<% else %>
+  <p>これは２人向けのページです</p>
+<% end %>
 
+<input id="url" class="copy-box" value="<%= request.url %>">
+<button id="tooltip-button" class="btn btn-primary inline-block-nm copy-btn" data-clipboard-target="#url"　data-toggle="tooltip" title="コピーされました">linkをコピー</button>
+
+
+<!-- 締め切っているが、決まっていない場合に表示 -->
 <% if !@submission.finished_flag && @submission.expired_flag %>
   <p>締め切りました</p>
 <% end %>
 
-
+<!-- 決定した場合にその日程を表示 -->
 <% if @submission.finished_flag %>
   <h2>決定した日時</h2>
   <input id="submited" class="copy-box" value="<%= @determined_date %>">
   <button id="tooltip-button" class="btn btn-primary copy-btn" data-clipboard-target="#submited" data-toggle="tooltip" title="コピーされました">日時をコピー</button>
 <% end %>
 
-<% if !@submission.expired_flag && @submission.more_than_two && @submission.user == current_user %>
-  <button class="btn btn-primary" id="expiration">締め切る</button>
-<% elsif !@submission.expired_flag && @submission.more_than_two && @submission.user != current_user %>
-  <button class="btn btn-primary" id="submit-detaildates">送信する</button>
+
+<% if !@submission.expired_flag && @submission.more_than_two %>
+  <% if logged_in? %>
+    <!-- 複数人ページで締め切っていおらず、作成者が表示した場合に締め切るボタンを表示 -->
+    <% if @submission.user == current_user %>
+      <button class="btn btn-primary" id="expiration">締め切る</button>
+    <!-- 複数人ページで締め切っていおらず、招待者が表示した場合に締め切るボタンを表示 -->
+    <% else %>
+      <button class="btn btn-primary" id="select-by-oneclick">ワンクリックで選択する</button>
+      <button class="btn btn-primary" id="submit-detaildates">送信する</button>
+    <% end %>
+  <% else %>
+    <button class="btn btn-primary" id="submit-detaildates">送信する</button>
+  <% end %>
 <% end %>
+
+<div class="container" style="margin: 70px 0px;">
+  <div class="col-sm-8 col-sm-offset-2">
+    <div id='calendar'></div>
+  </div>
+</div>
+
 <%= render 'shared/name' %>

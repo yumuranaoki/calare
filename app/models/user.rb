@@ -11,6 +11,10 @@ class User < ApplicationRecord
     has_many :events, dependent: :destroy
     has_many :groups, dependent: :destroy
     has_many :google_calendars, dependent: :destroy
+    has_many :notifications, dependent: :destroy
+    has_many :submissions, dependent: :destroy
+
+
     has_many :active_relationships, class_name: 'Relationship',
                                     foreign_key: 'follower_id',
                                     dependent: :destroy
@@ -26,12 +30,22 @@ class User < ApplicationRecord
                                     foreign_key: 'user_follower_id',
                                     dependent: :destroy
     has_many :user_followeds, through: :active_user_relations
+
     has_many :passive_user_relations, class_name: 'UserRelation',
                                      foreign_key: 'user_followed_id',
                                      dependent: :destroy
     has_many :user_followers, through: :passive_user_relations
-    has_many :notifications, dependent: :destroy
-    has_many :submissions, dependent: :destroy 
+
+    has_many :active_user_detail_relationships, class_name: 'DetailDateRelationship',
+                                                foreign_key: 'follower_id',
+                                                dependent: :destroy
+    has_many :followed_detail_dates, through: :active_user_detail_relationships, source: :followed
+
+    has_many :active_user_sub_relationships, class_name: 'UserSubRelationship',
+                                                foreign_key: 'follower_id',
+                                                dependent: :destroy
+    has_many :followed_submissions, through: :active_user_sub_relationships, source: :followed
+
 
     def follow(other_group)
         active_relationships.create(followed_id: other_group.id)
@@ -55,6 +69,22 @@ class User < ApplicationRecord
 
     def following_user?(other_user)
         followeds.include?(other_user)
+    end
+
+    def follow_detail_date(detail_date)
+        active_user_detail_relationships.create(followed_id: detail_date.id)
+    end
+
+    def unfollow_detail_date(detail_date)
+        active_user_detail_relationships.find_by(followed_id: detail_date.id).destroy
+    end
+
+    def follow_submission(submission)
+        active_user_sub_relationships.create(followed_id: submission.id)
+    end
+
+    def unfollow_submission(submission)
+        active_user_sub_relationships.find_by(followed_id: submission.id).destroy
     end
 
     def self.search(search)

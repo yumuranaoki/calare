@@ -258,7 +258,8 @@ $(document).on('turbolinks:load', function(){
             eventData = {
               start: start,
               end: end,
-              id: num
+              id: num,
+              color: "#cecece"
             };
             tmp_start = eventData['start']['_d'] + '';
             tmp_end = eventData['end']['_d'] + '';
@@ -404,7 +405,11 @@ $(document).on('turbolinks:load', function(){
       var submission_id = gon.submission_id
       var detail_dates_arr = gon.detail_dates_arr
       var detail_dates_id_arr = gon.detail_dates_id_arr
+      var detail_date_auto_arr = gon.detail_date_auto_arr
+      var oneclickBool = false
 
+
+      //送信するボタンに対するaction
       $("#submit-detaildates").on("click", function(){
         if (confirm("本当に送信しますか")) {
           $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
@@ -429,6 +434,24 @@ $(document).on('turbolinks:load', function(){
             ;
           });
         }
+      })
+
+      //ワンクリックで選択するボタンに対するaction
+      $("#select-by-oneclick").on("click", function(){
+        //一旦全部削除してから、追加
+        if (!oneclickBool) {
+          $('#calendar').fullCalendar( 'removeEventSource', path + '/d.json')
+          $('#calendar').fullCalendar( 'addEventSource', path + '/da.json')
+          detail_dates_arr = detail_date_auto_arr
+          $("#select-by-oneclick").text("選択したイベントを解除する");
+        } else {
+          $('#calendar').fullCalendar( 'removeEventSource', path + '/da.json')
+          $('#calendar').fullCalendar( 'addEventSource', path + '/d.json')
+          detail_dates_arr = gon.detail_dates_arr
+          $("#select-by-oneclick").text("ワンクリックで選択する");
+        }
+        oneclickBool = !oneclickBool
+
       })
 
       console.log(detail_dates_arr)

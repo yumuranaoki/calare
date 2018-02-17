@@ -45,7 +45,11 @@ class SubmissionsController < ApplicationController
     @submission = Submission.find_by(access_id: params[:access_id])
     #ユーザーの情報をjsに送る
     #作成者か招待者か
-    gon.selfcreate = (current_user == @submission.user) ? true : false
+    if logged_in?
+      gon.selfcreate = (current_user == @submission.user) ? true : false
+    else
+      gon.selfcreate = false
+    end
     #logginユーザー
     gon.logged_in = logged_in?
     #２人ページ or 複数
@@ -59,7 +63,8 @@ class SubmissionsController < ApplicationController
     #submissonのdetail_dateの取扱い
     detail_dates_arr = []
     detail_dates_id_arr = []
-    @submission.detail_dates.each do |d|
+    detail_dates = @submission.detail_dates
+    detail_dates.each do |d|
       detail_dates_arr << {id: d.id, selected: false}
       detail_dates_id_arr << d.id
     end
@@ -68,7 +73,42 @@ class SubmissionsController < ApplicationController
     if !@submission.followeds.empty?
       @determined_date = "#{@submission.followeds.first.starttime.strftime("%m月%d日%H:%M")}〜#{@submission.followeds.first.endtime.strftime("%m月%d日%H:%M")}まで"
     end
-    logger.debug("でばっぐ：#{Rails.application.secrets.google_client_id}")
+
+    #ここからmore_than_two && !expired_flag && current_user != @submission.userの際に、ワンクリックで回答できるボタンを作る
+    #要領はgoupと一緒、submission.detail_datesでloop回す
+    detail_date_auto_arr = []
+    if logged_in?
+      if @submission.more_than_two && !@submission.expired_flag && current_user != @submission.user
+
+        user_events = current_user.events
+        detail_dates.each do |detail_date_each|
+          #user_eventsがdetail_dateにかぶっているかを調べる
+          #検索(where)とloop回す方法の２つ試す
+          #かぶってなかったらそのdetail_dateのselectedをtrueにする
+          searched_events = user_events.where(["startday < ? and endday < ?", detail_date_each.starttime, detail_date_each.starttime])
+                                        .or(user_events.where(["startday > ? and endday > ?", detail_date_each.endtime, detail_date_each.endtime]))
+          if user_events.count == searched_events.count
+            detail_date_auto_arr << {id: detail_date_each.id, selected: true}
+
+            #デフォルトを選択させる場合は下のコード
+            #detail_dates_arr.each do |d_d|
+            #  logger.debug("でばっぐdetail_date_arr前：#{detail_dates_arr}")
+            #  logger.debug("でばっぐdetail_date_arr前：#{d_d}")
+            #  logger.debug("でばっぐdetail_date_arr前：#{d_d[:id]}")
+            #  logger.debug("でばっぐdetail_date_arr前：#{detail_date_each.id}")
+            #  if d_d[:id] == detail_date_each.id
+            #    d_d[:selected] = true
+            #  end
+            #  logger.debug("でばっぐdetail_date_arr後：#{detail_dates_arr}")
+            #end
+          else
+            detail_date_auto_arr << {id: detail_date_each.id, selected: false}
+          end
+        end
+        logger.debug("でばっぐdetail_date_auto_arrだす：#{detail_date_auto_arr}")
+      end
+    end
+    gon.detail_date_auto_arr = detail_date_auto_arr
   end
 
   def destroy
@@ -102,6 +142,7 @@ class SubmissionsController < ApplicationController
   end
 
   #calendarから招待者
+  #招待者(submission.user_followers)のカレンダーにも登録
   def determine_detaildate
     logger.debug('デバッグ：ポスト成功')
     logger.debug("ぱらむすメンバーフラッグ#{params[:memberFlag]}")
@@ -141,7 +182,7 @@ class SubmissionsController < ApplicationController
           session[:authorization] = response
           google_calendar_event = Google::Apis::CalendarV3::Event.new(summary: submission.title,
                                                                       start: {date_time: detail_date.starttime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
-                                                                    end: {date_time: detail_date.endtime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
+                                                                      end: {date_time: detail_date.endtime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
                                                                       id: event_id)
           service = Google::Apis::CalendarV3::CalendarService.new
           service.authorization = client
@@ -150,6 +191,26 @@ class SubmissionsController < ApplicationController
         end
       end
     end
+    
+    #招待者(submission.user_followers)のカレンダーにも登録
+    submisson.user_followers.each do |follower|
+      if !follower.google_calendars.empty?
+        google_calendar = follower.google_calendars.order(:id).first
+        refresh_token = google_calendar.refresh_token
+        client = Signet::OAuth2::Client.new(client_options)
+        client.update!(refresh_token: refresh_token)
+        response = client.fetch_access_token!
+        session[:authorization] = response
+        google_calendar_event = Google::Apis::CalendarV3::Event.new(summary: submission.title,
+                                                                    start: {date_time: detail_date.starttime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
+                                                                    end: {date_time: detail_date.endtime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
+                                                                    id: event_id)
+        service = Google::Apis::CalendarV3::CalendarService.new
+        service.authorization = client
+        service.insert_event("primary", google_calendar_event)
+      end
+    end
+
     #２人向けのグループの場合ここで受付終了
     logger.debug("でばっぐ：#{params[:memberFlag]}")
     if params[:memberFlag] == 'true'
@@ -175,6 +236,10 @@ class SubmissionsController < ApplicationController
         selected_date = detail_dates.find(date['id'])
         selected_date.update(counted: selected_date.counted + 1)
       end
+    end
+    #submissionをfollowする
+    if logged_in?
+      current_user.follow(submission)
     end
   end
 

@@ -15,8 +15,14 @@ class UsersController < ApplicationController
     @user = current_user
     @groups = @user.groups
     @g_c = @groups.count - 1
-    @submissions = @user.submissions
+    #followしているsubmissionのidを取ってきて@submissionの検索に加える
+    followed_submission_id_arr = []
+    @user.followed_submissions.each do |submission|
+      followed_submission_id_arr << submission.id
+    end
+    @submissions = Submission.where(user_id: [@user.id]).or(Submission.where(id: followed_submission_id_arr))
     @s_c = @submissions.count - 1
+    logger.debug("でばっぐgoogle_client：#{Rails.application.secrets.google_client_id}")
     user_show
   end
 
@@ -60,6 +66,11 @@ class UsersController < ApplicationController
 
   def participating
     @groups = current_user.followeds
+    followed_submission_id_arr = []
+    current_user.followed_submissions.each do |submission|
+      followed_submission_id_arr << submission.id
+    end
+    @submissions = Submission.where(id: followed_submission_id_arr)
     user_show
   end
 
