@@ -114,7 +114,12 @@ body > .grey{
   right: 100px;
 }
 
-
+#floating-actionbutton {
+  position: fixed;
+  z-index: 1;
+  top: 75px;
+  right: 35px;
+}
 
 /*     footer     */
 footer {
