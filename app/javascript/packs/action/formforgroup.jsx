@@ -10,13 +10,31 @@ export const handleCancel = () => {
   };
 }
 
-export const handleSubmit = (startdate, enddate) => {
-  console.log(startdate)
-  console.log(enddate)
+
+export const afterHandleSubmit = (startdate, enddate) => {
+  console.log("afterHandleSubmit")
   return {
-    type: "HANDLE_SUBMIT"
+    type: "AFTER_HANDLE_SUBMIT"
   }
 }
+
+export const handleSubmit =(startdate, enddate) => {
+  return dispatch => {
+    const csrfToken = document.getElementsByName('csrf-token').item(0).content;
+    fetch('http://localhost:3000/date', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
+      },
+      body: JSON.stringify({startdate: startdate, enddate: enddate}),
+    })
+    .then(() => dispatch(afterHandleSubmit(startdate, enddate)))
+  }
+}
+
+
 
 export const handleSecondCancel = () => {
   return {
@@ -24,18 +42,32 @@ export const handleSecondCancel = () => {
   }
 }
 
-export const handleSecondSubmit = (starttime, endtime, timelength) => {
+export const afterHandleSecondSubmit = (starttime, endtime, timelength) => {
+  console.log("afterHandleSecondSubmit")
   return {
-    type: "HANDLE_SECOND_SUBMIT",
-    starttime: starttime,
-    endtime: endtime,
-    timelength: timelength
+    type: "AFTER_HANDLE_SECOND_SUBMIT"
   }
 }
 
+
+export const handleSecondSubmit = (starttime, endtime, timelength) => {
+  return dispatch => {
+    const csrfToken = document.getElementsByName('csrf-token').item(0).content;
+    fetch('http://localhost:3000/time', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
+      },
+      body: JSON.stringify({starttime: starttime, endtime: endtime, timelength:timelength}),
+    })
+    .then(() => dispatch(afterHandleSecondSubmit(starttime, endtime, timelength)))
+  }
+}
+
+
 export const handleChange = (value, type) => {
-  console.log(value);
-  console.log(type);
   return {
     type: "HANDLE_CHANGE",
     value: value,

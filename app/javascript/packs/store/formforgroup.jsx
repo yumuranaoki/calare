@@ -1,5 +1,6 @@
-import {createStore} from 'redux';
-import reducer from '../reducer/formforgroup'
+import {applyMiddleware, createStore} from 'redux';
+import reducer from '../reducer/formforgroup';
+import thunk from 'redux-thunk';
 
 const initialState = {
   isOpen: false,
@@ -9,6 +10,6 @@ const initialState = {
   timelength: 0
 }
 
-const store = createStore(reducer, initialState)
+const store = createStore(reducer, initialState, applyMiddleware(thunk))
 
 export default store;

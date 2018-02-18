@@ -41,6 +41,7 @@ Rails.application.routes.draw do
   get '/participating', to: 'users#participating'
   get '/invited', to: 'users#invited'
 
+  post '/submit', to: 'submissions#create'
   get '/s/:access_id', to: 'submissions#show', as: 's'
   delete '/s/:access_id', to: 'submissions#destroy', as: 's_del'
   post '/addfromsubmission', to: 'submissions#add_from_submission'
@@ -51,6 +52,9 @@ Rails.application.routes.draw do
   post '/submitdetaildates', to: 'submissions#submit_detail_dates'
   get '/s/:access_id/d', to: 'detail_dates#index'
   get '/s/:access_id/da', to: 'detail_dates#index_for_auto'
+
+  post '/date', to: 'api#receivedate'
+  post '/time', to: 'api#receivetime'
 
   resources :relationships, only:[:create, :destroy, :show]
   resources :user_relations, only:[:create, :destroy, :show]
@@ -64,7 +68,7 @@ Rails.application.routes.draw do
   post '/createevent', to: 'events#create_event'
   patch '/editevent', to: 'events#edit_event'
 
-  post '/submit', to: 'submissions#create'
+
 
   resources :account_activations, only:[:edit]
   resources :password_resets, only:[:new, :edit, :update, :create]

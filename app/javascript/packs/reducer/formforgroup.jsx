@@ -4,12 +4,12 @@ const reducer = (state, action) => {
       return Object.assign({}, state, {isOpen: true})
     case "HANDLE_CANCEL":
       return Object.assign({}, state, {isOpen: false})
-    case "HANDLE_SUBMIT":
+    case "AFTER_HANDLE_SUBMIT":
       return Object.assign({}, state, {isOpen: false, isSecondOpen: true})
     case "HANDLE_SECOND_CANCEL":
       return Object.assign({}, state, {isSecondOpen: false})
-    case "HANDLE_SECOND_SUBMIT":
-      return state;
+    case "AFTER_HANDLE_SECOND_SUBMIT":
+      return Object.assign({}, state, {isSecondOpen: false})
     case "HANDLE_CHANGE":
       //type(start, end, length)によって場合分け
       switch (action.formType) {

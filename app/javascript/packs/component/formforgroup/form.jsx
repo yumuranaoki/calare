@@ -15,7 +15,7 @@ class Form extends React.Component {
   render() {
 
     const todayDate = new Date();
-    
+
     const actions = [
       <FlatButton
         label="Cancel"

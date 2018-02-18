@@ -6,6 +6,12 @@ import SelectTime from './selecttime'
 
 class DetailForm extends React.Component {
 
+  handleSecondSubmit = () => {
+    this.props.handleSecondSubmit(this.props.starttime,
+                                  this.props.endtime,
+                                  this.props.timelength)
+  }
+
 
   render() {
     const actions = [
@@ -15,11 +21,7 @@ class DetailForm extends React.Component {
       />,
       <FlatButton
         label="Submit"
-        onClick={
-          () => { this.props.handleSecondSubmit(this.props.starttime,
-                                                this.props.endtime,
-                                                this.props.timelength) }
-        }
+        onClick={this.handleSecondSubmit}
       />,
     ];
     return(
