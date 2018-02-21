@@ -1,52 +1,39 @@
 class ApiController < ApplicationController
-  include GoogleCalendarsHelper
-  def receivedate
-    starttime = Time.strptime(params[:startdate], "%Y-%m-%d")
-    endtime = Time.strptime(params[:enddate], "%Y-%m-%d")
-
-    group = current_user.groups.create!(title: params[:title],
-                                        starttime: starttime,
-                                        endtime: endtime,
-                                        multi: params[:multi],
-                                        access_id: params[:eventId],
-                                        timelength: 0,
-                                        starttime_of_day: '0',
-                                        endtime_of_day: '0',
-                                      )
-  end
-
+  include GoogleCalendarsHelper  
   def receivetime
     starttime = params[:starttime]
     endtime = params[:endtime]
+    #受け取ったstarttime,endtimeを"--:--"の文字列にする
     starttime_of_day = (starttime.even?) ? (starttime / 2).to_s << ":00" : ((starttime - 1) / 2).to_s << ":30"
     endtime_of_day = (endtime.even?) ? (endtime / 2).to_s << ":00" : ((endtime - 1) / 2).to_s << ":30"
-    group = Group.find_by(access_id: params[:accessId])
-    if group.update(starttime_of_day: starttime_of_day,
-                    endtime_of_day: endtime_of_day,
-                    timelength: params[:timelength])
-
-
+    submission_starttime = Time.strptime(params[:startdate], "%Y-%m-%d")
+    submission_endtime = Time.strptime(params[:enddate], "%Y-%m-%d")
+    submission = current_user.submissions.build(title: params[:title],
+                                                access_id: params[:eventId],
+                                                more_than_two: params[:multi])
+    #submission作成
+    if submission.save!
                     #ここから空いてる時間からdetail_date_for_group作成
-                    startday = group.starttime.to_s.split[0]
-                    endday = group.endtime.to_s.split[0]
+                    startday = submission_starttime.to_s.split[0]
+                    endday = submission_endtime.to_s.split[0]
                     #日時の文字列作成
-                    starttime_str = startday << " " << group.starttime_of_day
-                    endtime_str = endday << " " << group.endtime_of_day
+                    starttime_str = startday << " " << starttime_of_day
+                    endtime_str = endday << " " << endtime_of_day
                     #文字列をTimeWithZoneに変換
                     starttime = Time.zone.strptime(starttime_str,'%Y-%m-%d %H:%M')
                     endtime = Time.zone.strptime(endtime_str,'%Y-%m-%d %H:%M')
                     #自分の空いてる時間をとってきてsubmission同様にする
                     #最終日 - 初日
-                    diff_of_day = ((group.endtime - group.starttime) / 3600 / 24).to_i
+                    diff_of_day = ((submission_endtime - submission_starttime) / 3600 / 24).to_i
                     #終わる時間　- 始まる時間　（30分単位）
-                    hour_of_start = group.starttime_of_day.split(":")[0].to_i
-                    min_of_start = group.starttime_of_day.split(":")[1].to_i
-                    hour_of_end = group.endtime_of_day.split(":")[0].to_i
-                    min_of_end = group.endtime_of_day.split(":")[1].to_i
+                    hour_of_start = starttime_of_day.split(":")[0].to_i
+                    min_of_start = starttime_of_day.split(":")[1].to_i
+                    hour_of_end = endtime_of_day.split(":")[0].to_i
+                    min_of_end = endtime_of_day.split(":")[1].to_i
                     starttime_of_day = (min_of_start == 0) ? hour_of_start*2 : hour_of_start*2 + 1
                     endtime_of_day = (min_of_end == 0) ? hour_of_end*2 : hour_of_end*2 + 1
                     diff_of_half_hour = (endtime_of_day - starttime_of_day - 1 >= 0) ? endtime_of_day - starttime_of_day - 1 : 0
-                    events = group.user.events.where(["endday > ?", starttime]).or(group.user.events.where(["startday < ?", endtime]))
+                    events = submission.user.events.where(["endday > ?", starttime]).or(submission.user.events.where(["startday < ?", endtime]))
                     num_of_events = events.count
                     convinient_time_array = []
                     inconvinient_event_arr = []
@@ -91,7 +78,7 @@ class ApiController < ApplicationController
                     if complete_array.count == 1 && convinient_time_array.count > 1
                       number_start = convinient_time_array[0]
                       number_end = convinient_time_array[-1] + 1
-                      if number_end - number_start >= group.timelength
+                      if number_end - number_start >= params[:timelength]
                         result << [number_start, number_end]
                       end
                     elsif complete_array.count > 1
@@ -102,14 +89,14 @@ class ApiController < ApplicationController
                         complete_array.delete_at(position_end)
                         position_start = position_end - 1
                         number_start = complete_array[position_start]
-                        if number_end - number_start >= group.timelength
+                        if number_end - number_start >= params[:timelength]
                           result << [number_start, number_end]
                         end
                       end
                       if complete_array[-1] != convinient_time_array[-1]
                         number_start = complete_array_saved[-1]
                         number_end = convinient_time_array[-1] + 1
-                        if number_end - number_start >= group.timelength*2
+                        if number_end - number_start >= params[:timelength]*2
                           result << [number_start, number_end]
                         end
                       end
@@ -121,12 +108,12 @@ class ApiController < ApplicationController
                     #resultに対してeachでloop回して、startとendを登録
                     #idほしいから、groupにdetail_date紐付けて、イベントの個数だけdetail_date作成する
                     result.each do |r|
-                      group.detail_date_for_groups.create!(starttime: starttime.since(r[0]*30.minutes), endtime: starttime.since(r[1]*30.minutes))
+                      submission.detail_dates.create!(starttime: starttime.since(r[0]*30.minutes), endtime: starttime.since(r[1]*30.minutes))
                     end
 
 
     end
-    current_user.follow(group)
+    current_user.follow_submission(submission)
   end
 
   #招待者がイベントをクリックした際にpostされる

@@ -39,9 +39,6 @@
         </tr>
       </thead>
       <tbody id="table_delete" class="append">
-        <%= @groups.nil? %>
-        <%= @groups.empty? %>
-        <%= @submissions.empty? %>
         <% if !(@groups.empty? && @submissions.empty?) %>
           <% if @groups.count != 0 %>
             <% @groups.each_with_index do |group, i| %>

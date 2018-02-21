@@ -8,10 +8,16 @@ class DetailForm extends React.Component {
 
   handleSecondSubmit = () => {
     console.log(this.props.eventId)
-    this.props.handleSecondSubmit(this.props.starttime,
-                                  this.props.endtime,
-                                  this.props.timelength,
-                                  this.props.eventId)
+    let data = {title: this.props.title,
+                startdate: this.props.startdate,
+                starttime: this.props.starttime,
+                enddate: this.props.enddate,
+                endtime: this.props.endtime,
+                timelength: this.props.timelength,
+                multi: this.props.multi,
+                eventId: this.props.eventId
+              }
+    this.props.handleSecondSubmit(data);
   }
 
 

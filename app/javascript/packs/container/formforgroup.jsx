@@ -12,7 +12,10 @@ const mapStateToProps = state => ({
   endtime: state.endtime,
   timelength: state.timelength,
   multi: state.multi,
-  eventId: state.eventId
+  eventId: state.eventId,
+  title:  state.title,
+  startdate: state.startdate,
+  enddate: state.enddate
 })
 
 

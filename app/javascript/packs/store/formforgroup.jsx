@@ -5,7 +5,10 @@ import thunk from 'redux-thunk';
 const initialState = {
   isOpen: false,
   isSecondOpen: false,
+  title: '',
+  startdate: '',
   starttime: 24,
+  enddate: '',
   endtime: 24,
   timelength: 0,
   multi: false,

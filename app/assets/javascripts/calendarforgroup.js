@@ -17,9 +17,6 @@ $(document).on('turbolinks:load', function(){
     var detail_dates_id_arr = gon.detail_dates_id_arr;
     var oneclickBool = false;
 
-
-    console.log(selfcreate)
-
     //function
     //作成者・招待者クリックイベント
     determine = function(id, eventId) {
@@ -193,8 +190,6 @@ $(document).on('turbolinks:load', function(){
 
     //招待者
     } else {
-      console.log(multi)
-      console.log(finishedFlag)
 
       //カレンダーの共通部分
       $('#calendar').fullCalendar({

@@ -21,15 +21,17 @@ class FormForGroup extends React.Component {
         />
         <DetailForm
           isSecondOpen={this.props.isSecondOpen}
+          title={this.props.title}
+          startdate={this.props.startdate}
           starttime={this.props.starttime}
+          enddate={this.props.enddate}
           endtime={this.props.endtime}
           timelength={this.props.timelength}
-          handleSecondCancel={this.props.handleSecondCancel}
-          handleSecondSubmit={
-            (starttime, endtime, timelength, accessId) => this.props.handleSecondSubmit(starttime, endtime, timelength, accessId)
-          }
-          handleChange={(value, type) => this.props.handleChange(value, type)}
           eventId={this.props.eventId}
+          multi={this.props.multi}
+          handleSecondCancel={this.props.handleSecondCancel}
+          handleSecondSubmit={(data) => this.props.handleSecondSubmit(data)}
+          handleChange={(value, type) => this.props.handleChange(value, type)}
         />
       </div>
     );

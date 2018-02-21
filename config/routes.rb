@@ -58,7 +58,7 @@ Rails.application.routes.draw do
   #自動回答用のeventを突っ込む
   get '/s/:access_id/da', to: 'detail_dates#index_for_auto'
 
-  post '/date', to: 'api#receivedate'
+  #reactで作成したformからのsubmit
   post '/time', to: 'api#receivetime'
 
   post 'determine_by_i_from_g', to: 'api#determine_by_i_from_g'

@@ -4,10 +4,14 @@ const reducer = (state, action) => {
       return Object.assign({}, state, {isOpen: true})
     case "HANDLE_CANCEL":
       return Object.assign({}, state, {isOpen: false})
-    case "AFTER_HANDLE_SUBMIT":
+    case "HANDLE_SUBMIT":
       return Object.assign({}, state, {isOpen: false,
                                       isSecondOpen: true,
-                                      eventId: action.data["eventId"]})
+                                      eventId: action.data["eventId"],
+                                      title: action.data["title"],
+                                      multi: action.data["multi"],
+                                      startdate: action.data["startdate"],
+                                      enddate: action.data["enddate"]})
     case "HANDLE_SECOND_CANCEL":
       return Object.assign({}, state, {isSecondOpen: false})
     case "AFTER_HANDLE_SECOND_SUBMIT":

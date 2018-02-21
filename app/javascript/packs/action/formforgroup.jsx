@@ -12,7 +12,6 @@ export const handleCancel = () => {
 
 
 export const afterHandleSubmit = (data) => {
-  console.log("afterHandleSubmit")
   return {
     type: "AFTER_HANDLE_SUBMIT",
     data: data
@@ -20,19 +19,9 @@ export const afterHandleSubmit = (data) => {
 }
 
 export const handleSubmit =(data) => {
-  console.log(data)
-  return dispatch => {
-    const csrfToken = document.getElementsByName('csrf-token').item(0).content;
-    fetch('http://localhost:3000/date', {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': csrfToken
-      },
-      body: JSON.stringify(data),
-    })
-    .then(() => dispatch(afterHandleSubmit(data)))
+  return {
+    type: "HANDLE_SUBMIT",
+    data: data
   }
 }
 
@@ -44,17 +33,14 @@ export const handleSecondCancel = () => {
   }
 }
 
-export const afterHandleSecondSubmit = (starttime, endtime, timelength) => {
-  console.log("afterHandleSecondSubmit")
+export const afterHandleSecondSubmit = () => {
   return {
     type: "AFTER_HANDLE_SECOND_SUBMIT"
   }
 }
 
 
-export const handleSecondSubmit = (starttime, endtime, timelength, accessId) => {
-  console.log(accessId)
-  console.log(starttime)
+export const handleSecondSubmit = (data) => {
   return dispatch => {
     const csrfToken = document.getElementsByName('csrf-token').item(0).content;
     fetch('http://localhost:3000/time', {
@@ -64,9 +50,9 @@ export const handleSecondSubmit = (starttime, endtime, timelength, accessId) => 
         'Content-Type': 'application/json',
         'X-CSRF-Token': csrfToken
       },
-      body: JSON.stringify({starttime: starttime, endtime: endtime, timelength: timelength, accessId: accessId}),
+      body: JSON.stringify(data),
     })
-    .then(() => dispatch(afterHandleSecondSubmit(starttime, endtime, timelength)))
+    .then(() => dispatch(afterHandleSecondSubmit()))
   }
 }
 

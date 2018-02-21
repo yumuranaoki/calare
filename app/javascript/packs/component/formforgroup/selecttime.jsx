@@ -23,7 +23,7 @@ class SelectTime extends React.Component {
         width: 200
       },
       timelength: {
-        width: 100
+        width: 200
       }
     };
 
@@ -49,7 +49,7 @@ class SelectTime extends React.Component {
           <SelectField
             id="starttime"
             style={styles.form}
-            floatingLabelText="starttime"
+            floatingLabelText="何時から"
             maxHeight={150}
             value={this.props.starttime}
             onChange={this.handleChangeStart}
@@ -61,7 +61,7 @@ class SelectTime extends React.Component {
           <SelectField
             id="endtime"
             style={styles.form}
-            floatingLabelText="endtime"
+            floatingLabelText="何時まで"
             maxHeight={150}
             value={this.props.endtime}
             onChange={this.handleChangeEnd}
@@ -73,7 +73,7 @@ class SelectTime extends React.Component {
           <SelectField
             id="timelength"
             style={styles.timelength}
-            floatingLabelText="timelength"
+            floatingLabelText="どのくらいの時間"
             maxHeight={150}
             value={this.props.timelength}
             onChange={this.handleChangeLength}

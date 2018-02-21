@@ -15,28 +15,23 @@
   <body>
     <%= render 'layouts/header' %>
 
-      <div class="container">
-        <% flash.each do |message_type, message| %>
-          <div class = "alert alert-<%= message_type %>"><%= message %></div>
-        <% end %>
-      </div>
-
-      <!-- ajaxでjs.erbを呼ぶためのリンク -->
-      <!-- アイコンは変更する -->
       <% if logged_in? && !current_page?(controller: 'static_pages', action: 'home') %>
         <div id="floating-actionbutton"></div>
-        <!--　後々消す　
-        <%= link_to new_user_group_path(user_id: current_user.id), class: "create-button create-group-button", remote: true do %>
-          <%= fa_icon("users 3x", class: "scale black") %>
-        <% end %>
-        <%= link_to new_user_event_path(user_id: current_user.id), class: "create-button create-event-button", remote: true do %>
-          <%= fa_icon("calendar-plus-o 3x", class: "scale black") %>
-        <% end %>
-        -->
       <% end %>
 
       <div class="container grey">
-        <%= yield %>
+
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3">
+          <% flash.each do |message_type, message| %>
+            <div class = "alert alert-<%= message_type %>"><%= message %></div>
+          <% end %>
+        </div>
+
+        <div style="padding-top: 30px;">
+          <%= yield %>
+        </div>
+
         <%= render 'layouts/footer' %>
       </div>
 
