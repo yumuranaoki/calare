@@ -273,7 +273,17 @@ $(document).on('turbolinks:load', function(){
           var start = event.start;
           var end = event.end;
           var id = event.id;
-          edit_event(start, end, id);
+          test[2*id] = start['_d'] + '';
+          test[2*id+1] = end['_d'] + '';
+          console.log(test);
+        },
+        eventDrop: function(event) {
+          var start = event.start;
+          var end = event.end;
+          var id = event.id;
+          test[2*id] = start['_d'] + '';
+          test[2*id+1] = end['_d'] + '';
+          console.log(test);
         },
         navLinks: true,
         timeFormat: 'H:mm',
