@@ -184,7 +184,6 @@ $(document).on('turbolinks:load', function(){
     }
 
     edit_submitted_event = function(start, end, id, access_id) {
-      console.log("呼ばれた")
       $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
         var token;
         if (!options.crossDomain) {
@@ -289,6 +288,7 @@ $(document).on('turbolinks:load', function(){
     var finishedFlag = gon.finishedFlag
     var expiredFlag = gon.expiredFlag
     var submission_id = gon.submission_id
+    var answeredFlag = gon.answered
 
     $("#expiration").on("click", function(){
       if (confirm("本当に締め切りますか")) {
@@ -340,7 +340,13 @@ $(document).on('turbolinks:load', function(){
         eventClick: function(calEvent) {
           //締め切っているかどうか
           console.log(expiredFlag)
-          if (expiredFlag && memberFlag && !finishedFlag) {
+          console.log(answeredFlag)
+          if (!answeredFlag) {
+            if (confirm("are you sure to delete?")) {
+              delete_from_submission(calEvent.id, path_id)
+              $('#calendar').fullCalendar('removeEvents', calEvent.id );
+            }
+          } else if (anseweredFlag && expiredFlag && memberFlag && !finishedFlag) {
             //締め切っていて複数人向けのグループなら、作成者のクリックで決定
             if (confirm('are you sure to pick this')) {
               calEvent.color = "rgb(214, 76, 97)"
@@ -358,7 +364,7 @@ $(document).on('turbolinks:load', function(){
             }
           }
         },
-        selectable: false, //(!finishedFlag || !expiredFlag) ? true : false,
+        selectable: (!answeredFlag) ? true : false,
         selectHelper: true,
 
         //selectを新しい日程の提示に使う
@@ -381,7 +387,19 @@ $(document).on('turbolinks:load', function(){
           $('#calendar').fullCalendar('unselect');
           add_from_submission(start, end, id, path_id);
         },
-        editable: false,
+        editable: (!answeredFlag) ? true : false,
+        eventResize: function(event) {
+          var start = event.start;
+          var end = event.end;
+          var id = event.id;
+          edit_submitted_event(start, end, id);
+        },
+        eventDrop: function(event) {
+          var start = event.start;
+          var end = event.end;
+          var id = event.id;
+          edit_submitted_event(start, end, id, path_id);
+        },
         navLinks: true,
         timeFormat: 'H:mm',
         slotLabelFormat: 'H:mm',
@@ -406,7 +424,8 @@ $(document).on('turbolinks:load', function(){
       var detail_dates_arr = gon.detail_dates_arr
       var detail_dates_id_arr = gon.detail_dates_id_arr
       var detail_date_auto_arr = gon.detail_date_auto_arr
-      var oneclickBool = false
+      var oneclickBool = false;
+      var anseweredFlag = gon.answered;
 
 
       //送信するボタンに対するaction

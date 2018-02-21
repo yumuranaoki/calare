@@ -60,6 +60,8 @@ class SubmissionsController < ApplicationController
     gon.expiredFlag = @submission.expired_flag
     #submissionのid
     gon.submission_id = @submission.id
+    #ansered
+    gon.answered = @submission.answered
     #submissonのdetail_dateの取扱い
     detail_dates_arr = []
     detail_dates_id_arr = []
@@ -89,18 +91,6 @@ class SubmissionsController < ApplicationController
                                         .or(user_events.where(["startday > ? and endday > ?", detail_date_each.endtime, detail_date_each.endtime]))
           if user_events.count == searched_events.count
             detail_date_auto_arr << {id: detail_date_each.id, selected: true}
-
-            #デフォルトを選択させる場合は下のコード
-            #detail_dates_arr.each do |d_d|
-            #  logger.debug("でばっぐdetail_date_arr前：#{detail_dates_arr}")
-            #  logger.debug("でばっぐdetail_date_arr前：#{d_d}")
-            #  logger.debug("でばっぐdetail_date_arr前：#{d_d[:id]}")
-            #  logger.debug("でばっぐdetail_date_arr前：#{detail_date_each.id}")
-            #  if d_d[:id] == detail_date_each.id
-            #    d_d[:selected] = true
-            #  end
-            #  logger.debug("でばっぐdetail_date_arr後：#{detail_dates_arr}")
-            #end
           else
             detail_date_auto_arr << {id: detail_date_each.id, selected: false}
           end
@@ -219,6 +209,10 @@ class SubmissionsController < ApplicationController
     end
     #submissionと決定したdetail_datesを関連付け
     submission.follow(detail_date)
+    #submissionのansweredをtureに
+    if !submission.answered
+      submission.update!(answered: true)
+    end
   end
 
   def expire
@@ -240,6 +234,9 @@ class SubmissionsController < ApplicationController
     #submissionをfollowする
     if logged_in?
       current_user.follow(submission)
+    end
+    if !submission.ansered
+      submission.update!(answered: true)
     end
   end
 
