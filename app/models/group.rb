@@ -11,6 +11,13 @@ class Group < ApplicationRecord
     has_many :followeds, through: :active_group_user_relationships
     has_many :comments
     has_many :answers
+    has_many :detail_date_for_groups
+
+    #detail_date_for_groupsをfollow
+    has_many :active_group_detail_relationships, class_name: "GroupDetailRelationship",
+                                                foreign_key: "follower_id",
+                                                dependent: :destroy
+    has_many :followed_detail_dates, through: :active_group_detail_relationships, source: :followed
 
     validates :title, presence: true
     validates :starttime, presence: true
@@ -22,7 +29,7 @@ class Group < ApplicationRecord
     validate :start_must_be_earlier_than_end
 
     def start_must_be_earlier_than_end
-      if starttime >= endtime || starttime_of_day >= endtime_of_day
+      if starttime > endtime
         errors.add(:event, ": その日程は設定できません。")
       end
     end
@@ -38,4 +45,14 @@ class Group < ApplicationRecord
     def following?(other_user)
       followeds.include?(other_user)
     end
+
+    #detail_dateをfollow,unfollow
+    def follow_detail_dates(detail_date)
+      active_group_detail_relationships.create(followed_id: detail_date.id)
+    end
+
+    def unfollow_detail_dates(detail_date)
+      active_group_detail_relationships.find_by(followed_id: detail_date.id).destroy
+    end
+
 end

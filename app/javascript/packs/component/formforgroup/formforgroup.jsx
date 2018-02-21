@@ -14,8 +14,10 @@ class FormForGroup extends React.Component {
           isOpen={this.props.isOpen}
           handleCancel={this.props.handleCancel}
           handleSubmit={
-            (enddate, startdate) => this.props.handleSubmit(startdate, enddate)
+            (data) => this.props.handleSubmit(data)
           }
+          onToggle={this.props.onToggle}
+          multi={this.props.multi}
         />
         <DetailForm
           isSecondOpen={this.props.isSecondOpen}
@@ -24,9 +26,10 @@ class FormForGroup extends React.Component {
           timelength={this.props.timelength}
           handleSecondCancel={this.props.handleSecondCancel}
           handleSecondSubmit={
-            (starttime, endtime, timelength) => this.props.handleSecondSubmit(starttime, endtime, timelength)
+            (starttime, endtime, timelength, accessId) => this.props.handleSecondSubmit(starttime, endtime, timelength, accessId)
           }
           handleChange={(value, type) => this.props.handleChange(value, type)}
+          eventId={this.props.eventId}
         />
       </div>
     );

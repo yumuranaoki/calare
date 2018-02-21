@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180217152533) do
+ActiveRecord::Schema.define(version: 20180220134459) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,16 @@ ActiveRecord::Schema.define(version: 20180217152533) do
     t.datetime "updated_at", null: false
     t.string "name"
     t.index ["group_id"], name: "index_comments_on_group_id"
+  end
+
+  create_table "detail_date_for_groups", force: :cascade do |t|
+    t.datetime "starttime"
+    t.datetime "endtime"
+    t.integer "counted", default: 0
+    t.bigint "group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_detail_date_for_groups_on_group_id"
   end
 
   create_table "detail_date_relationships", force: :cascade do |t|
@@ -75,6 +85,14 @@ ActiveRecord::Schema.define(version: 20180217152533) do
     t.index ["user_id"], name: "index_google_calendars_on_user_id"
   end
 
+  create_table "group_detail_relationships", force: :cascade do |t|
+    t.integer "follower_id"
+    t.integer "followed_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["follower_id", "followed_id"], name: "index_group_detail_relationships_on_follower_id_and_followed_id", unique: true
+  end
+
   create_table "group_user_relationships", force: :cascade do |t|
     t.integer "follower_id"
     t.integer "followed_id"
@@ -102,6 +120,7 @@ ActiveRecord::Schema.define(version: 20180217152533) do
     t.string "determined_start"
     t.string "determined_end"
     t.boolean "finished", default: false
+    t.boolean "expired_flag", default: false
     t.index ["access_id"], name: "index_groups_on_access_id", unique: true
     t.index ["user_id"], name: "index_groups_on_user_id"
   end
@@ -192,6 +211,7 @@ ActiveRecord::Schema.define(version: 20180217152533) do
 
   add_foreign_key "answers", "groups"
   add_foreign_key "comments", "groups"
+  add_foreign_key "detail_date_for_groups", "groups"
   add_foreign_key "detail_dates", "submissions"
   add_foreign_key "events", "users"
   add_foreign_key "google_calendars", "users"

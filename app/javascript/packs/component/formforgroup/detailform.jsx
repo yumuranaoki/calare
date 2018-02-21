@@ -7,9 +7,11 @@ import SelectTime from './selecttime'
 class DetailForm extends React.Component {
 
   handleSecondSubmit = () => {
+    console.log(this.props.eventId)
     this.props.handleSecondSubmit(this.props.starttime,
                                   this.props.endtime,
-                                  this.props.timelength)
+                                  this.props.timelength,
+                                  this.props.eventId)
   }
 
 
@@ -20,7 +22,7 @@ class DetailForm extends React.Component {
         onClick={this.props.handleSecondCancel}
       />,
       <FlatButton
-        label="Submit"
+        label="作成"
         onClick={this.handleSecondSubmit}
       />,
     ];

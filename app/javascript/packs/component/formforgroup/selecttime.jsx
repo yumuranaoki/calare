@@ -29,14 +29,15 @@ class SelectTime extends React.Component {
 
 
     const items = []
-    for (let i=0; i < 100; i++){
+    for (let i=0; i < 24; i++){
       items.push(
-        <MenuItem value={i} key={i} primaryText={`Item ${i}`} />
+        <MenuItem value={2*i} key={2*i} primaryText={`${i}:00`} />,
+        <MenuItem value={2*i+1} key={2*i+1} primaryText={`${i}:30`} />
       )
     }
 
     const timeItems = []
-    for (let i=0; i < 12; i++){
+    for (let i=0; i <= 12; i++){
       timeItems.push(
         <MenuItem value={i} key={i} primaryText={i} />
       );
@@ -49,7 +50,7 @@ class SelectTime extends React.Component {
             id="starttime"
             style={styles.form}
             floatingLabelText="starttime"
-            maxHeight={100}
+            maxHeight={150}
             value={this.props.starttime}
             onChange={this.handleChangeStart}
           >
@@ -61,7 +62,7 @@ class SelectTime extends React.Component {
             id="endtime"
             style={styles.form}
             floatingLabelText="endtime"
-            maxHeight={100}
+            maxHeight={150}
             value={this.props.endtime}
             onChange={this.handleChangeEnd}
           >
@@ -73,7 +74,7 @@ class SelectTime extends React.Component {
             id="timelength"
             style={styles.timelength}
             floatingLabelText="timelength"
-            maxHeight={100}
+            maxHeight={150}
             value={this.props.timelength}
             onChange={this.handleChangeLength}
           >

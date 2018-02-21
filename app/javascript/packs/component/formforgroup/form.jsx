@@ -3,13 +3,25 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import DatePicker from 'material-ui/DatePicker';
-
+import TextField from 'material-ui/TextField';
+import Toggle from 'material-ui/Toggle';
 class Form extends React.Component {
 
   handleSubmit = () => {
     let startdateVal = document.getElementById("startdate").value;
     let enddateVal = document.getElementById("enddate").value;
-    this.props.handleSubmit(startdateVal, enddateVal)
+    let title = document.getElementById("textfield-for-title").value;
+    let multi = this.props.multi;
+    let l = 25;
+    let c = "abcdefghijklmnopqrstuvwxyz0123456789";
+    let cl = c.length;
+    let eventId = "";
+    for(let i=0; i<l; i++){
+    eventId += c[Math.floor(Math.random()*cl)];
+    }
+    let data = {startdate: startdateVal, enddate: enddateVal, title: title, multi: multi, eventId: eventId}
+    console.log(data["eventId"])
+    this.props.handleSubmit(data)
   }
 
   render() {
@@ -22,7 +34,7 @@ class Form extends React.Component {
         onClick={this.props.handleCancel}
       />,
       <FlatButton
-        label="Submit"
+        label="次へ"
         onClick={this.handleSubmit}
       />,
     ];
@@ -31,22 +43,32 @@ class Form extends React.Component {
     return(
       <MuiThemeProvider>
         <Dialog
-          title="create group by oneclick"
+          title="google calendarから予定調整"
           modal={true}
           open={this.props.isOpen}
           actions={actions}
         >
-        Only actions can close this dialog.
+        <TextField
+          id="textfield-for-title"
+          floatingLabelText="タイトルを入力してください"
+        />
+        <Toggle
+          id="bool-toggle"
+          label="複数人で日程調整"
+          onToggle={this.props.onToggle}
+        />
         <DatePicker
-          hintText="startdate"
+          floatingLabelText="いつから"
           autoOk={true}
           id="startdate"
+          mode="landscape"
           defaultDate={todayDate}
         />
         <DatePicker
-          hintText="enddate"
+          floatingLabelText="いつまで"
           autoOk={true}
           id="enddate"
+          mode="landscape"
           defaultDate={todayDate}
         />
         </Dialog>

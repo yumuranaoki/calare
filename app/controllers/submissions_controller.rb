@@ -29,7 +29,7 @@ class SubmissionsController < ApplicationController
         count += 1
       end
     end
-
+    current_user.follow_submission(submission)
     respond_to do |format|
       if count==(number+1)
         logger.debug("save成功")
@@ -132,8 +132,6 @@ class SubmissionsController < ApplicationController
 
   def edit_submitted_event
     submission = Submission.find_by(access_id: params[:access_id])
-    logger.debug("さぶみっしょんいｄは#{submission.id}")
-    logger.debug("さぶみっしょんいｄは#{params[:id]}")
     detail_date = submission.detail_dates.find(params[:id])
     detail_date.update(
       starttime: params[:starttime],
@@ -162,7 +160,7 @@ class SubmissionsController < ApplicationController
       session[:authorization] = response
       google_calendar_event = Google::Apis::CalendarV3::Event.new(summary: submission.title,
                                                                   start: {date_time: detail_date.starttime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
-                                                                end: {date_time: detail_date.endtime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
+                                                                  end: {date_time: detail_date.endtime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
                                                                   id: event_id)
       service = Google::Apis::CalendarV3::CalendarService.new
       service.authorization = client
@@ -191,23 +189,25 @@ class SubmissionsController < ApplicationController
         end
       end
     end
-    
+
     #招待者(submission.user_followers)のカレンダーにも登録
-    submisson.user_followers.each do |follower|
-      if !follower.google_calendars.empty?
-        google_calendar = follower.google_calendars.order(:id).first
-        refresh_token = google_calendar.refresh_token
-        client = Signet::OAuth2::Client.new(client_options)
-        client.update!(refresh_token: refresh_token)
-        response = client.fetch_access_token!
-        session[:authorization] = response
-        google_calendar_event = Google::Apis::CalendarV3::Event.new(summary: submission.title,
-                                                                    start: {date_time: detail_date.starttime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
-                                                                    end: {date_time: detail_date.endtime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
-                                                                    id: event_id)
-        service = Google::Apis::CalendarV3::CalendarService.new
-        service.authorization = client
-        service.insert_event("primary", google_calendar_event)
+    if !submission.user_followers.empty?
+      submisson.user_followers.each do |follower|
+        if !follower.google_calendars.empty?
+          google_calendar = follower.google_calendars.order(:id).first
+          refresh_token = google_calendar.refresh_token
+          client = Signet::OAuth2::Client.new(client_options)
+          client.update!(refresh_token: refresh_token)
+          response = client.fetch_access_token!
+          session[:authorization] = response
+          google_calendar_event = Google::Apis::CalendarV3::Event.new(summary: submission.title,
+                                                                      start: {date_time: detail_date.starttime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
+                                                                      end: {date_time: detail_date.endtime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
+                                                                      id: event_id)
+          service = Google::Apis::CalendarV3::CalendarService.new
+          service.authorization = client
+          service.insert_event("primary", google_calendar_event)
+        end
       end
     end
 
@@ -241,6 +241,11 @@ class SubmissionsController < ApplicationController
     if logged_in?
       current_user.follow(submission)
     end
+  end
+
+  def unfollow
+    submission = Submission.find_by(access_id: params[:access_id])
+    current_user.unfollow_submission(submission)
   end
 
   private

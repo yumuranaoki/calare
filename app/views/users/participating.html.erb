@@ -2,12 +2,20 @@
 
   <% provide(:title, current_user.name) %>
 
-  <div class = 'container' style="margin-bottom: 30px;" >
+  <div style="margin-bottom: 30px;" >
 
     <div class = "row">
-      <div class = "col-sm-8 col-sm-offset-2">
+      <div class = "col-lg-8 col-lg-offset-2">
         <div id="calendar"></div>
-        <button id="submission">submit!</button>
+        <button id="submission" class="btn btn-primary">submit!</button>
+        <div class="btn-group" data-toggle="buttons">
+        	<label class="btn btn-default active">
+        		<input type="radio" autocomplete="off" name="member" value=false checked> ２人の日程を調整
+        	</label>
+        	<label class="btn btn-default">
+        		<input type="radio" autocomplete="off" name="member" value=true> ３人以上の日程調整
+        	</label>
+        </div>
       </div>
     </div>
 
@@ -16,37 +24,60 @@
     <ul class="nav nav-tabs">
         <li class="nav-item"><%= link_to "my groups", you_path %></li>
         <li class="nav-item active"><%= link_to "Participating groups", participating_path %></li>
-        <li class="nav-item"><%= link_to "Invited groups", invited_path %></li>
+        <!-- <li class="nav-item"><%= link_to "Invited groups", invited_path %></li> -->
     </ul>
 
-    <h2>my groups</h2>
+    <h2>participating groups</h2>
     <table class="table">
       <thead>
         <tr>
-          <th></th>
+          <td></td>
           <th> group name</th>
-          <th></th>
           <th></th>
         </tr>
       </thead>
-      <tbody>
-        <% if !@groups.empty? %>
-          <% @groups.each_with_index do |group, i| %>
-        <tr>
-          <th></th>
-          <td><%= link_to group.title, g_path(access_id: group.access_id) %></td>
-          <td><%= link_to "edit", g_edit_path(access_id: group.access_id), remote: true %></td>
-          <td><%= link_to "delete", g_path(access_id: group.access_id), remote: true %></td>
-        </tr>
-          <% break if i+1 >= @groups.count %>
+      <tbody id="table_delete" class="append">
+        <%= @groups.nil? %>
+        <%= @groups.empty? %>
+        <%= @submissions.empty? %>
+        <% if !(@groups.empty? && @submissions.empty?) %>
+          <% if @groups.count != 0 %>
+            <% @groups.each_with_index do |group, i| %>
+
+              <tr>
+                <td></td>
+                <td><%= link_to group.title, g_path(access_id: group.access_id) %></td>
+                <td>
+                  <%= link_to g_path(access_id: group.access_id), method: :delete, remote: true do %>
+                    <button onClick='deleteRow(this);'>リストから削除</button>
+                  <% end %>
+                </td>
+              </tr>
+
+              <% break if i >= @g_c %>
+
+            <% end %>
+          <% end %>
+          <% if !@submissions.empty? %>
+            <% @submissions.each_with_index do |s, k| %>
+              <tr>
+                <td></td>
+                <td><%= link_to s.title, s_path(access_id: s.access_id) %></td>
+                <td>
+                  <%= link_to s_path(access_id: s.access_id), method: :delete, remote: true do%>
+                    <button onClick='deleteRow(this);'>リストから削除</button>
+                  <% end %>
+                </td>
+              </tr>
+              <% break if k >= @s_c %>
+            <% end %>
           <% end %>
         <% else %>
-        <tr>
-          <th></th>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
         <% end %>
       </tbody>
     </table>

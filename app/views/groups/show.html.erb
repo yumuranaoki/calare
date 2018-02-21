@@ -1,113 +1,45 @@
 <% provide(:title, @group.title) %>
 
-<div class = 'container'>
-
     <h1><%= @group.title %></h1>
 
-    <!-- button start -->
-    <% if logged_in? %>
-        <div class = "follow_form inline-block-nm">
-            <%= render 'follow_form' %>
-        </div>
-
-        <!-- あとで実装する -->
-        <!--
-        <button class="btn btn-primary inline-block-nm">招待する</button>
-        -->
-    <% elsif %>
-        <button class="btn btn-primary inline-block-nm"><%= link_to "ログインして利用する", login_path %></button>
-        <button class="btn btn-primary inline-block-nm"><%= link_to "sign up", signup_path %></button>
-    <% end %>
-
-      <!-- ３人以上での調整 -->
-      <% if @group.multi %>
-
-        <%= link_to g_comment_path(access_id: @group.access_id), remote: true do %>
-          <button class="btn btn-primary inline-block-nm">日程調整をする</button>
-        <% end %>
-
-      <!-- ２人での調整 -->
-      <% else %>
-
-        <!-- 日程調整が完了していない場合 もしくはグループ作成者じゃない -->
-        <% if !(@group.finished || @group.user == current_user) %>
-
-          <%= link_to g_answer_path(access_id: @group.access_id), remote: true do %>
-            <button class="btn btn-primary inline-block-nm">日程調整をする</button>
-          <% end %>
-
-        <% end %>
-      <% end %>
-
-    <!-- line、messangerなどで送りたい -->
-    <button id="tooltip-button" class="btn btn-primary inline-block-nm copy-btn" data-clipboard-target="#url"　data-toggle="tooltip" title="コピーされました">linkをコピー</button>
-    <!-- button end -->
-    <div style="width: 450px;"></div>
-    <input id="url" class="copy-box" value="<%= request.url %>">
-
-
-    <!-- 1. multi -->
-    <!-- 2. !multi -->
-      <!-- a. @group.user == current_user -->
-      <!-- b. @group.user != current_user -->
-    <div class="row" style="margin-bottom: 100px;">
-
-      <div class = "col-md-6">
-        <div class = "schedule">
-            <h2>schedule</h2>
-
-              <% if @group.multi %>
-
-                <%= render 'multi_table' %>
-
-              <% else %>
-
-                <% if @group.user == current_user %>
-                  <h3>提示する日程</h3>
-                <% else %>
-
-                <% end %>
-
-                  <%= render 'two_table' %>
-
-              <% end %>
-
-        </div>
-      </div>
-
-
-      <% if !@group.content.empty? %>
-          <div class = "col-md-6">
-              <h2>description</h2>
-                  <div class="">
-                      <%= @group.content %>
-                  </div>
-          </div>
-      <% end %>
-
+    <!-- リンクをコピーボタン -->
+    <div>
+      <input id="url" class="copy-box" value="<%= request.url %>">
+      <button id="tooltip-button" class="btn btn-primary inline-block-nm copy-btn" data-clipboard-target="#url"　data-toggle="tooltip" title="コピーされました">linkをコピー</button>
     </div>
 
-    <% if @group.multi %>
-      <div class="row">
-          <div class="col-md-6">
-              <h2>グループのメンバー</h2>
-
-                <%= render 'member' %>
-
-                <h3>招待中</h3>
-
-                  <%= render 'invited' %>
-
-          </div>
-      </div>
+    <!-- expireボタン -->
+    <% if !@group.expired_flag && current_user == @group.user %>
+      <button class="btn btn-primary" id="expiration">締め切る</button>
     <% end %>
 
-    <!-- 新規登録用のmodalを表示(yes,noの二択から)-->
-    <%= render 'register' %>
-    <%= render 'final' %>
+    <!-- 招待者の送信ボタン -->
+    <% if !@group.expired_flag && current_user != @group.user %>
+      <button class="btn btn-primary" id="submit-detaildates">送信</button>
+      <button class="btn btn-primary" id="select-by-oneclick">ワンクリックで選択する</button>
+    <% end %>
 
 
-</div>
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2">
+        <div id='calendar'></div>
+      </div>
+    </div>
+
+    <!-- 締め切ったことを表示 -->
+    <% if @group.expired_flag && !@group.finished %>
+      <p>締め切りました</p>
+    <% end %>
+
+    <!--  決まった場合　-->
+    <% if @group.finished %>
+      <h2>決定した日程<h2>
+        <input id="submited" class="copy-box" value="<%= @determined_date %>">
+        <button id="tooltip-button" class="btn btn-primary copy-btn" data-clipboard-target="#submited" data-toggle="tooltip" title="コピーされました">日時をコピー</button>
+    <% end %>
+
+
 
 
 <%= javascript_include_tag "group" %>
+<%= render 'shared/name' %>

@@ -16,7 +16,7 @@ $(document).on('turbolinks:load', function(){
       disconnected: function() {},
       received: function(data) {
         //通知のマークを出したい（reactかなー）
-        console.log(data)
+
       },
       speak: function(name, starttime, endtime) {
         return this.perform('speak', {
@@ -539,10 +539,6 @@ $(document).on('turbolinks:load', function(){
        ]
       });
     }
-
-
-
-
 
     //submitに関する
     submit = function(title, arr, radioVal){

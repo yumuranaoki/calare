@@ -14,6 +14,9 @@ module GroupsHelper
     #日時の文字列作成
     starttime_str = startday << " " << @starttime_of_day
     endtime_str = endday << " " << @endtime_of_day
+    logger.debug(startday)
+    logger.debug(@starttime_of_day)
+    logger.debug(starttime_str)
     #文字列をTimeWithZoneに変換
     @starttime = Time.zone.strptime(starttime_str,'%Y-%m-%d %H:%M')
     @endtime = Time.zone.strptime(endtime_str,'%Y-%m-%d %H:%M')
@@ -52,7 +55,7 @@ module GroupsHelper
                 @event_count += 1
                 @convinient_event.push(event.title)
               else
-                @inconvinient_event.push(event.title)
+                #@inconvinient_event.push(event.title)
               end
             end
             #event_loop終了

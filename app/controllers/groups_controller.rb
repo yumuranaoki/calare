@@ -10,7 +10,28 @@ class GroupsController < ApplicationController
   #@group = Group.find_by(access_id: params[:access_id])
   #followしたときの挙動しらべてredirectも変える
   def show
-    convinient_group
+    @group = Group.find_by(access_id: params[:access_id])
+    #calendar.jsに情報を渡す
+    #作成者かどうか
+    gon.selfcreate = (current_user == @group.user) ? true : false
+    #終了しているか
+    gon.finished_flag = @group.finished
+    gon.multi = @group.multi
+    gon.expired_flag = @group.expired_flag
+    #detai_date_for_groupsのidの配列
+    detail_dates_id_arr = []
+    #idとbooleanの配列、カレンダー用
+    detail_dates_arr = []
+    @group.detail_date_for_groups.each do |detail_date|
+      detail_dates_id_arr << detail_date.id
+      detail_dates_arr << {id: detail_date.id, selected: false}
+    end
+    gon.detail_dates_id_arr = detail_dates_id_arr
+    gon.detail_dates_arr = detail_dates_arr
+    if !@group.followed_detail_dates.empty?
+      followed_detail_date = @group.followed_detail_dates.first
+      @determined_date = "#{followed_detail_date.starttime.strftime("%m月%d日%H:%M")}~#{followed_detail_date.endtime.strftime("%m月%d日%H:%M")}"
+    end
   end
 
   def new
@@ -53,6 +74,12 @@ class GroupsController < ApplicationController
 
   def destroy
   end
+
+  def unfollow
+    group = Group.find_by(access_id: params[:access_id])
+    current_user.unfollow(group)
+  end
+
 
     private
 
