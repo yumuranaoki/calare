@@ -53,7 +53,7 @@ export const handleSecondSubmit = (data) => {
       body: JSON.stringify(data),
     })
     .then(() => dispatch(afterHandleSecondSubmit()))
-    //errorをcatchしてdispatchそこで失敗のmodal開かせる
+    //errorのmodal    
   }
 }
 

@@ -13,8 +13,8 @@ const initialState = {
   timelength: 0,
   multi: false,
   eventId: '',
-  isThirdOpen: false
-
+  isThirdOpen: false,
+  isForthOpen: false
 }
 
 const store = createStore(reducer, initialState, applyMiddleware(thunk))

@@ -13,7 +13,7 @@ const reducer = (state, action) => {
                                       startdate: action.data["startdate"],
                                       enddate: action.data["enddate"]})
     case "HANDLE_SECOND_CANCEL":
-      return Object.assign({}, state, {isSecondOpen: false, isThirdOpen: true})
+      return Object.assign({}, state, {isSecondOpen: false})
     case "AFTER_HANDLE_SECOND_SUBMIT":
       return Object.assign({}, state, {isSecondOpen: false})
     case "HANDLE_CHANGE":
@@ -31,7 +31,7 @@ const reducer = (state, action) => {
     case "ON_TOGGLE":
       return Object.assign({}, state, {multi: !state.multi})
     case "HANDLE_CLOSE":
-      return Object.assign({}, state, {isThirdOpen: false})
+      return Object.assign({}, state, {isThirdOpen: false, isForthOpen: false})
     default:
       return state;
   }
