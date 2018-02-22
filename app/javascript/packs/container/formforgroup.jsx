@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import FormForGroup from '../component/formforgroup/formforgroup';
 import {handlePlus, handleCancel, handleSubmit, handleSecondCancel,
-        handleSecondSubmit, handleChange, onToggle} from '../action/formforgroup';
+        handleSecondSubmit, handleChange, onToggle, handleClose} from '../action/formforgroup';
 
 
 const mapStateToProps = state => ({
@@ -15,7 +15,8 @@ const mapStateToProps = state => ({
   eventId: state.eventId,
   title:  state.title,
   startdate: state.startdate,
-  enddate: state.enddate
+  enddate: state.enddate,
+  isThirdOpen: state.isThirdOpen
 })
 
 
@@ -26,7 +27,8 @@ const mapDispatchToProps = dispatch => ({
   handleSecondCancel: () => dispatch(handleSecondCancel()),
   handleSecondSubmit: (starttime, endtime, timelength, accessId) => dispatch(handleSecondSubmit(starttime, endtime, timelength, accessId)),
   handleChange: (value, type) => dispatch(handleChange(value, type)),
-  onToggle: () => dispatch(onToggle())
+  onToggle: () => dispatch(onToggle()),
+  handleClose: () => dispatch(handleClose())
 })
 
 

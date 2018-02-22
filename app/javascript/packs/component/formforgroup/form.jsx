@@ -5,6 +5,7 @@ import FlatButton from 'material-ui/FlatButton';
 import DatePicker from 'material-ui/DatePicker';
 import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
+
 class Form extends React.Component {
 
   handleSubmit = () => {

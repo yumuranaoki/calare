@@ -2,6 +2,7 @@ import React from 'react';
 import Form from './form';
 import ButtonForForm from './button';
 import DetailForm from './detailform';
+import ResultModal from './resultmodal';
 
 class FormForGroup extends React.Component {
   render() {
@@ -32,6 +33,10 @@ class FormForGroup extends React.Component {
           handleSecondCancel={this.props.handleSecondCancel}
           handleSecondSubmit={(data) => this.props.handleSecondSubmit(data)}
           handleChange={(value, type) => this.props.handleChange(value, type)}
+        />
+        <ResultModal
+          handleClose={this.props.handleClose}
+          isThirdOpen={this.props.isThirdOpen}
         />
       </div>
     );

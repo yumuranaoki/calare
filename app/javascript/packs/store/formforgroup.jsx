@@ -12,7 +12,9 @@ const initialState = {
   endtime: 24,
   timelength: 0,
   multi: false,
-  eventId: ''
+  eventId: '',
+  isThirdOpen: false
+
 }
 
 const store = createStore(reducer, initialState, applyMiddleware(thunk))

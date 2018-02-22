@@ -53,6 +53,7 @@ export const handleSecondSubmit = (data) => {
       body: JSON.stringify(data),
     })
     .then(() => dispatch(afterHandleSecondSubmit()))
+    //errorをcatchしてdispatchそこで失敗のmodal開かせる
   }
 }
 
@@ -68,5 +69,11 @@ export const handleChange = (value, type) => {
 export const onToggle = () => {
   return {
     type: "ON_TOGGLE"
+  }
+}
+
+export const handleClose = () => {
+  return {
+    type: "HANDLE_CLOSE"
   }
 }
