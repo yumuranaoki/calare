@@ -7,10 +7,14 @@ git_source(:github) do |repo_name|
 end
 
 
+gem 'omniauth'
+gem 'omniauth-twitter'
+gem 'omniauth-facebook'
 gem 'webpacker'
 gem 'gon'
 gem 'pg'
 gem "font-awesome-rails"
+gem 'bootstrap-social-rails'
 gem 'bootstrap3-datetimepicker-rails'
 gem 'will_paginate',           '3.1.5'
 gem 'bootstrap-will_paginate', '1.0.0'
