@@ -1,4 +1,6 @@
 class SubmissionsController < ApplicationController
+  include GoogleCalendarsHelper
+
   def create
     count = 0
     #submissionを作成
@@ -132,49 +134,30 @@ class SubmissionsController < ApplicationController
   #calendarから招待者
   #招待者(submission.user_followers)のカレンダーにも登録
   def determine_detaildate
-    logger.debug('デバッグ：ポスト成功')
-    logger.debug("ぱらむすメンバーフラッグ#{params[:memberFlag]}")
     submission = Submission.find_by(access_id: params[:access_id])
     detail_date = submission.detail_dates.find(params[:id])
     event_id = params[:event_id]
     parent_user = submission.user
-    logger.debug("作成者名は#{parent_user.name}")
-
     if !parent_user.google_calendars.empty?
-      logger.debug("作成者カレンダーありあらり")
       parent_google_calendar = parent_user.google_calendars.order(:id).first
-      refresh_token = parent_google_calendar.refresh_token
-      client = Signet::OAuth2::Client.new(client_options)
-      client.update!(refresh_token: refresh_token)
-      response = client.fetch_access_token!
-      session[:authorization] = response
-      google_calendar_event = Google::Apis::CalendarV3::Event.new(summary: submission.title,
-                                                                  start: {date_time: detail_date.starttime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
-                                                                  end: {date_time: detail_date.endtime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
-                                                                  id: event_id)
-      service = Google::Apis::CalendarV3::CalendarService.new
-      service.authorization = client
-      service.insert_event("primary", google_calendar_event)
+      google_calenar_authentification(parent_google_calendar)
+      insert_calendar(parent_google_calendar,
+                      submission.title,
+                      detail_date.starttime.strftime("%Y-%m-%dT%H:%M:%S+09:00"),
+                      detail_date.endtime.strftime("%Y-%m-%dT%H:%M:%S+09:00"),
+                      event_id)
     end
     #回答者がログインしている場合、回答者のカレンダーにもつっこむ
     if logged_in?
       if parent_user != current_user
-        logger.debug("ログインはできます")
         if !current_user.google_calendars.empty?
-          logger.debug("招待者カレンダーあります")
           google_calendar = current_user.google_calendars.order(:id).first
-          refresh_token = google_calendar.refresh_token
-          client = Signet::OAuth2::Client.new(client_options)
-          client.update!(refresh_token: refresh_token)
-          response = client.fetch_access_token!
-          session[:authorization] = response
-          google_calendar_event = Google::Apis::CalendarV3::Event.new(summary: submission.title,
-                                                                      start: {date_time: detail_date.starttime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
-                                                                      end: {date_time: detail_date.endtime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
-                                                                      id: event_id)
-          service = Google::Apis::CalendarV3::CalendarService.new
-          service.authorization = client
-          service.insert_event("primary", google_calendar_event)
+          google_calenar_authentification(google_calendar)
+          insert_calendar(parent_google_calendar,
+                          submission.title,
+                          detail_date.starttime.strftime("%Y-%m-%dT%H:%M:%S+09:00"),
+                          detail_date.endtime.strftime("%Y-%m-%dT%H:%M:%S+09:00"),
+                          event_id)
         #普通にcurrent_user.eventにつっこむ
         end
       end
@@ -185,26 +168,14 @@ class SubmissionsController < ApplicationController
       submisson.user_followers.each do |follower|
         if !follower.google_calendars.empty?
           google_calendar = follower.google_calendars.order(:id).first
-          refresh_token = google_calendar.refresh_token
-          client = Signet::OAuth2::Client.new(client_options)
-          client.update!(refresh_token: refresh_token)
-          response = client.fetch_access_token!
-          session[:authorization] = response
-          google_calendar_event = Google::Apis::CalendarV3::Event.new(summary: submission.title,
-                                                                      start: {date_time: detail_date.starttime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
-                                                                      end: {date_time: detail_date.endtime.strftime("%Y-%m-%dT%H:%M:%S+09:00")},
-                                                                      id: event_id)
-          service = Google::Apis::CalendarV3::CalendarService.new
-          service.authorization = client
-          service.insert_event("primary", google_calendar_event)
+          google_calenar_authentification(google_calendar)
+          insert_calendar(google_calendar)
         end
       end
     end
 
     #２人向けのグループの場合ここで受付終了
-    logger.debug("でばっぐ：#{params[:memberFlag]}")
     if params[:memberFlag] == 'true'
-      logger.debug("でばっぐ：#{params[:memberFlag]}")
       submission.update(finished_flag: true)
     end
     #submissionと決定したdetail_datesを関連付け
@@ -224,7 +195,6 @@ class SubmissionsController < ApplicationController
     submission = Submission.find(params[:submission_id])
     detail_dates = submission.detail_dates
     detail_dates_arr = params[:data]
-    logger.debug("でえばっぐ：#{detail_dates_arr}")
     detail_dates_arr.each do |index, date|
       if date['selected'] == "true"
         selected_date = detail_dates.find(date['id'])
@@ -246,15 +216,16 @@ class SubmissionsController < ApplicationController
   end
 
   private
-  def client_options
-    {
-    client_id: Rails.application.secrets.google_client_id,
-    client_secret: Rails.application.secrets.google_client_secret,
-    authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
-    token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
-    scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
-    redirect_uri: callback_url
-    }
-  end
+  
+    def client_options
+      {
+      client_id: Rails.application.secrets.google_client_id,
+      client_secret: Rails.application.secrets.google_client_secret,
+      authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+      token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
+      scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
+      redirect_uri: callback_url
+      }
+    end
 
 end

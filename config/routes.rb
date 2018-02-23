@@ -68,10 +68,15 @@ Rails.application.routes.draw do
   resources :relationships, only:[:create, :destroy, :show]
   resources :user_relations, only:[:create, :destroy, :show]
 
+  #auth
+  #google calendar
   get '/redirect', to: 'google_calendars#redirect', as: 'redirect'
   get '/callback', to: 'google_calendars#callback', as: 'callback'
   get '/list_all', to: 'google_calendars#list_all', as: 'list_all'
   get '/list_part', to: 'google_calendars#list_part', as: 'list_part'
+  #signup
+  get '/auth/:provider/callback/', to: 'sessions#create_from_oauth'
+  #login
 
   delete '/deleteevent', to: 'events#delete_event'
   post '/createevent', to: 'events#create_event'

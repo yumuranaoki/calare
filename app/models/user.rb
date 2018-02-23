@@ -13,6 +13,7 @@ class User < ApplicationRecord
     has_many :google_calendars, dependent: :destroy
     has_many :notifications, dependent: :destroy
     has_many :submissions, dependent: :destroy
+    has_many :authorization, dependent: :destroy
 
 
     has_many :active_relationships, class_name: 'Relationship',
@@ -106,8 +107,11 @@ class User < ApplicationRecord
     end
 
     def remember
-        self.remember_token = User.new_token
-        update_attribute(:remember_digest, User.digest(remember_token))
+      #class methodでtoken作成
+      #remember_tokenというattribute?
+      self.remember_token = User.new_token
+      #instanceについてupdate
+      update_attribute(:remember_digest, User.digest(remember_token))
     end
 
     def authenticated?(attribute, token)

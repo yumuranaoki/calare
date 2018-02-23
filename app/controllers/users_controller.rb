@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  include GoogleCalendarsHelper
+
   before_action :logged_in_user, only: [:index, :show, :edit, :update]
   before_action :correct_user,   only: [:edit, :update]
 
@@ -26,7 +28,14 @@ class UsersController < ApplicationController
     end
     @submissions = Submission.where(user_id: @user.id).where(id: followed_submission_id_arr)
     @s_c = @submissions.count - 1
-    user_show
+    if !current_user.google_calendars.empty?
+      google_calendar = current_user.google_calendars.order(:id).first
+      google_calenar_authentification(google_calendar)
+      insert_calendar(google_calendar)
+      service = Google::Apis::CalendarV3::CalendarService.new
+      service.authorization = client
+      check_sync(google_calendar)
+    end
   end
 
   def create
@@ -76,12 +85,27 @@ class UsersController < ApplicationController
     end
     @submissions = current_user.followed_submissions
     @s_c = @submissions.count - 1
-    user_show
+    if !current_user.google_calendars.empty?
+      google_calendar = current_user.google_calendars.order(:id).first
+      google_calenar_authentification(google_calendar)
+      insert_calendar(google_calendar)
+      service = Google::Apis::CalendarV3::CalendarService.new
+      service.authorization = client
+      check_sync(google_calendar)
+    end
   end
 
   def invited
     @groups = current_user.followers
-    user_show
+
+    if !current_user.google_calendars.empty?
+      google_calendar = current_user.google_calendars.order(:id).first
+      google_calenar_authentification(google_calendar)
+      insert_calendar(google_calendar)
+      service = Google::Apis::CalendarV3::CalendarService.new
+      service.authorization = client
+      check_sync(google_calendar)
+    end
   end
 
 

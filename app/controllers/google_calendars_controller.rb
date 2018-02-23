@@ -10,17 +10,15 @@ class GoogleCalendarsController < ApplicationController
         client.code = params[:code]
         response = client.fetch_access_token!
         session[:authorization] = response
-        logger.debug("いくそぞｚｆじゃｆじゃお：#{client}")
         service = Google::Apis::CalendarV3::CalendarService.new
         service.authorization = client
         email = service.get_calendar('primary')
         refresh_token = client.refresh_token
-        logger.debug("ここここここっここここここここここ#{refresh_token}")
         #同じカレンダーで複数登録してしまうリスク
         google_calendar = current_user.google_calendars.build(email: email.summary,
-                                          refresh_token: refresh_token,
-                                          sync: false,
-                                          next_sync_token: '')
+                                                              refresh_token: refresh_token,
+                                                              sync: false,
+                                                              next_sync_token: '')
         if google_calendar.save
             redirect_to list_all_url
         else
