@@ -7,34 +7,40 @@ git_source(:github) do |repo_name|
 end
 
 
-gem 'omniauth'
-gem 'omniauth-twitter'
-gem 'omniauth-facebook', '4.0.0'
-gem 'webpacker'
-gem 'gon'
-gem 'pg'
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '5.1.2'
+gem 'rails-controller-testing'
+#view
+gem 'sass-rails', '~> 5.0'
+gem 'bootstrap-sass', '3.3.7'
 gem "font-awesome-rails"
 gem 'bootstrap-social-rails'
 gem 'bootstrap3-datetimepicker-rails'
 gem 'will_paginate',           '3.1.5'
 gem 'bootstrap-will_paginate', '1.0.0'
-gem 'rails-controller-testing'
-gem 'google-api-client', require: 'google/apis/calendar_v3'
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.1.2'
-gem 'bcrypt',         '3.1.11'
-gem 'bootstrap-sass', '3.3.7'
-# Use Puma as the app server
-gem 'puma', '~> 3.7'
-# Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
+#frontend
 gem 'jquery-rails'
+gem 'webpacker'
+#oauth
+gem 'omniauth'
+gem 'omniauth-twitter'
+gem 'omniauth-facebook', '4.0.0'
+gem 'google-api-client', require: 'google/apis/calendar_v3'
+#calendar
 gem 'fullcalendar-rails'
 gem 'momentjs-rails'
+#DB
+gem 'pg'
+# Use Puma as the app server
+gem 'puma', '~> 3.7'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
+
+#others
+gem 'gon'
+gem 'bcrypt', '3.1.11'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
