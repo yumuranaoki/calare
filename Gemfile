@@ -38,6 +38,8 @@ gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
+
+
 #others
 gem 'gon'
 gem 'bcrypt', '3.1.11'
@@ -62,6 +64,10 @@ group :development, :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '~> 2.13'
   gem 'selenium-webdriver'
+  gem "rspec-rails"
+  gem "factory_bot_rails"
+  gem "guard-rspec"
+  gem "spring-commands-rspec"
 end
 
 group :development do
@@ -71,6 +77,13 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+end
+
+group :test do
+  gem "faker"
+  gem "database_cleaner"
+  gem "launchy"
+  gem "shoulda-matchers"
 end
 
 
