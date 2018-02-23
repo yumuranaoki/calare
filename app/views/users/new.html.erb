@@ -1,28 +1,33 @@
 <% provide(:title, 'Sign up') %>
 
-<div class = 'container'>
 
-<h1>Sign up</h1>
+<div class="title-center">
+  <h1>Sign up</h1>
+</div>
 
-<div class="row">
-  <div class="col-sm-6 col-sm-offset-3">
-    <%= form_for(@user, url: signup_path) do |f| %>
-      <%= render 'shared/error_messages' %>
-      <%= f.label :name %>
-      <%= f.text_field :name %>
 
-      <%= f.label :email %>
-      <%= f.email_field :email %>
+  <div class="row">
+    <div class="col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
+      <%= form_for(@user, url: signup_path) do |f| %>
+        <%= render 'shared/error_messages' %>
+        <%= f.label :name %>
+        <%= f.text_field :name %>
 
-      <%= f.label :password %>
-      <%= f.password_field :password %>
+        <%= f.label :email %>
+        <%= f.email_field :email %>
 
-      <%= f.label :password_confirmation, "Confirmation" %>
-      <%= f.password_field :password_confirmation %>
+        <%= f.label :password %>
+        <%= f.password_field :password %>
 
-      <%= f.submit "Create my account", class: "btn btn-primary" %>
-    <% end %>
+        <%= f.label :password_confirmation, "Confirmation" %>
+        <%= f.password_field :password_confirmation %>
+
+        <%= f.submit "Create my account", class: "btn btn-primary" %>
+      <% end %>
+
+      <%= link_to '/auth/facebook', class: "fa fa-facebook btn btn-facebook social-button" do %>
+        <span>　Facebookアカウントで登録</span>
+      <% end %>
+
+    </div>
   </div>
-</div>
-
-</div>

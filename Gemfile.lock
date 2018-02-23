@@ -304,7 +304,7 @@ DEPENDENCIES
   omniauth-twitter
   pg
   puma (~> 3.7)
-  rails (~> 5.1.2)
+  rails (= 5.1.5)
   rails-controller-testing
   sass-rails (~> 5.0)
   selenium-webdriver

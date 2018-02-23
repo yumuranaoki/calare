@@ -2,10 +2,12 @@
 
 
 
-<h1>Log in</h1>
+<div class="title-center">
+  <h1>Log in</h1>
+</div>
 
 <div class="row">
-  <div class="col-sm-6 col-sm-offset-3">
+  <div class="col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
     <%= form_for(:session, url: login_path) do |f| %>
 
       <%= f.label :email %>
@@ -24,5 +26,10 @@
     <% end %>
 
     <p>New user? <%= link_to "Sign up now!", signup_path %></p>
+
+    <%= link_to '/auth/facebook', class: "fa fa-facebook btn btn-facebook social-button" do %>
+      <span>　Facebookアカウントでログイン</span>
+    <% end %>
+
   </div>
 </div>
