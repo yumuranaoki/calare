@@ -30,6 +30,9 @@ test:
   database: calare_test
 
 production:
-  <<: *default
-  database: calare_production
+  adapter: postgresql
+  database: calare_production_db
+  username: naoki
+  password: naokizac103
+  encoding: utf8
   #database: db/production.sqlite3
