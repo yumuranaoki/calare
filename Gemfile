@@ -30,7 +30,7 @@ gem 'google-api-client', require: 'google/apis/calendar_v3'
 gem 'fullcalendar-rails'
 gem 'momentjs-rails'
 #DB
-gem 'pg'
+gem 'mysql2'
 # Use Puma as the app server
 gem 'puma', '~> 3.7'
 # Use Uglifier as compressor for JavaScript assets

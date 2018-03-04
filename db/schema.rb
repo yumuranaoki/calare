@@ -12,10 +12,7 @@
 
 ActiveRecord::Schema.define(version: 20180223141921) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
-  create_table "answers", force: :cascade do |t|
+  create_table "answers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -26,7 +23,7 @@ ActiveRecord::Schema.define(version: 20180223141921) do
     t.index ["group_id"], name: "index_answers_on_group_id"
   end
 
-  create_table "authorizations", force: :cascade do |t|
+  create_table "authorizations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "provider"
     t.string "uid"
     t.integer "user_id"
@@ -35,7 +32,7 @@ ActiveRecord::Schema.define(version: 20180223141921) do
     t.index ["provider", "uid"], name: "index_authorizations_on_provider_and_uid", unique: true
   end
 
-  create_table "comments", force: :cascade do |t|
+  create_table "comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -43,7 +40,7 @@ ActiveRecord::Schema.define(version: 20180223141921) do
     t.index ["group_id"], name: "index_comments_on_group_id"
   end
 
-  create_table "detail_date_for_groups", force: :cascade do |t|
+  create_table "detail_date_for_groups", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.datetime "starttime"
     t.datetime "endtime"
     t.integer "counted", default: 0
@@ -53,7 +50,7 @@ ActiveRecord::Schema.define(version: 20180223141921) do
     t.index ["group_id"], name: "index_detail_date_for_groups_on_group_id"
   end
 
-  create_table "detail_date_relationships", force: :cascade do |t|
+  create_table "detail_date_relationships", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "follower_id"
     t.integer "followed_id"
     t.datetime "created_at", null: false
@@ -61,7 +58,7 @@ ActiveRecord::Schema.define(version: 20180223141921) do
     t.index ["follower_id", "followed_id"], name: "index_detail_date_relationships_on_follower_id_and_followed_id", unique: true
   end
 
-  create_table "detail_dates", force: :cascade do |t|
+  create_table "detail_dates", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "submission_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -71,7 +68,7 @@ ActiveRecord::Schema.define(version: 20180223141921) do
     t.index ["submission_id"], name: "index_detail_dates_on_submission_id"
   end
 
-  create_table "events", force: :cascade do |t|
+  create_table "events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "title"
     t.datetime "startday"
     t.datetime "endday"
@@ -83,7 +80,7 @@ ActiveRecord::Schema.define(version: 20180223141921) do
     t.index ["user_id"], name: "index_events_on_user_id"
   end
 
-  create_table "google_calendars", force: :cascade do |t|
+  create_table "google_calendars", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -94,7 +91,7 @@ ActiveRecord::Schema.define(version: 20180223141921) do
     t.index ["user_id"], name: "index_google_calendars_on_user_id"
   end
 
-  create_table "group_detail_relationships", force: :cascade do |t|
+  create_table "group_detail_relationships", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "follower_id"
     t.integer "followed_id"
     t.datetime "created_at", null: false
@@ -102,7 +99,7 @@ ActiveRecord::Schema.define(version: 20180223141921) do
     t.index ["follower_id", "followed_id"], name: "index_group_detail_relationships_on_follower_id_and_followed_id", unique: true
   end
 
-  create_table "group_user_relationships", force: :cascade do |t|
+  create_table "group_user_relationships", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "follower_id"
     t.integer "followed_id"
     t.datetime "created_at", null: false
@@ -112,7 +109,7 @@ ActiveRecord::Schema.define(version: 20180223141921) do
     t.index ["follower_id"], name: "index_group_user_relationships_on_follower_id"
   end
 
-  create_table "groups", force: :cascade do |t|
+  create_table "groups", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "title"
     t.text "content"
     t.datetime "created_at", null: false
@@ -134,7 +131,7 @@ ActiveRecord::Schema.define(version: 20180223141921) do
     t.index ["user_id"], name: "index_groups_on_user_id"
   end
 
-  create_table "notifications", force: :cascade do |t|
+  create_table "notifications", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
     t.bigint "answer_id"
     t.datetime "created_at", null: false
@@ -144,7 +141,7 @@ ActiveRecord::Schema.define(version: 20180223141921) do
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
-  create_table "relationships", force: :cascade do |t|
+  create_table "relationships", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "follower_id"
     t.integer "followed_id"
     t.datetime "created_at", null: false
@@ -154,7 +151,7 @@ ActiveRecord::Schema.define(version: 20180223141921) do
     t.index ["follower_id"], name: "index_relationships_on_follower_id"
   end
 
-  create_table "schedules", force: :cascade do |t|
+  create_table "schedules", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "comment_id"
@@ -163,12 +160,12 @@ ActiveRecord::Schema.define(version: 20180223141921) do
     t.index ["comment_id"], name: "index_schedules_on_comment_id"
   end
 
-  create_table "sessions", force: :cascade do |t|
+  create_table "sessions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "submission_relationships", force: :cascade do |t|
+  create_table "submission_relationships", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "follower_id"
     t.integer "followed_id"
     t.datetime "created_at", null: false
@@ -176,7 +173,7 @@ ActiveRecord::Schema.define(version: 20180223141921) do
     t.index ["follower_id", "followed_id"], name: "index_submission_relationships_on_follower_id_and_followed_id", unique: true
   end
 
-  create_table "submissions", force: :cascade do |t|
+  create_table "submissions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -189,14 +186,14 @@ ActiveRecord::Schema.define(version: 20180223141921) do
     t.index ["user_id"], name: "index_submissions_on_user_id"
   end
 
-  create_table "user_relations", force: :cascade do |t|
+  create_table "user_relations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_follower_id"
     t.integer "user_followed_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "user_sub_relationships", force: :cascade do |t|
+  create_table "user_sub_relationships", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "follower_id"
     t.integer "followed_id"
     t.datetime "created_at", null: false
@@ -204,7 +201,7 @@ ActiveRecord::Schema.define(version: 20180223141921) do
     t.index ["follower_id", "followed_id"], name: "index_user_sub_relationships_on_follower_id_and_followed_id", unique: true
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
     t.string "email"
     t.datetime "created_at", null: false
