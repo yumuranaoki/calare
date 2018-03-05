@@ -56,5 +56,16 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :test
   host = 'localhost:3000'
   config.action_mailer.default_url_options = { host: host, protocol: 'http' }
+=begin
+  config.action_mailer.delivery_method = {
+    address: 'smtp.gmail.com',
+    port: 587,
+    domain: 'gmail.com',
+    user_name: 'calare.management@gmail.com',
+    password: Rails.application.secrets.gmail_password,
+    authentication: 'plain',
+    enable_starttls_auto: true
+  }
+=end
 
 end
