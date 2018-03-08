@@ -8,7 +8,6 @@
 # server "db.example.com", user: "deploy", roles: %w{db}
 
 
-
 # role-based syntax
 # ==================
 
@@ -59,3 +58,6 @@
 #     auth_methods: %w(publickey password)
 #     # password: "please use keys"
 #   }
+
+server '54.65.64.54', user: 'naoki', roles: %w{app db web}
+set :ssh_options, keys: '~/.ssh/calare_key_rsa'
