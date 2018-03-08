@@ -8,4 +8,4 @@ directory _proj_path
 workers 2
 threads 5, 5
 
-preload_app true
+preload_app!
