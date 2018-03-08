@@ -7,7 +7,7 @@ set :deploy_to, "/var/www/rails/calare"
 set :rbenv_ruby, "2.5.0"
 set :log_level, :debug
 set :keep_releases, 3
-set :linked_files, fetch(:linked_files, []).push('config/secret.yml')
+set :linked_files, fetch(:linked_files, []).push('config/secrets.yml')
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
 
 namespace :deploy do
