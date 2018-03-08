@@ -5,7 +5,7 @@ pidfile "#{_proj_path}/tmp/pids/puma.pid"
 bind "unix://#{_proj_path}/tmp/sockets/puma.sock"
 directory _proj_path
 
-worker_processes 2
+workers 2
 threads 5, 5
 
 preload_app true
