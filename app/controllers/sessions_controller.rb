@@ -44,7 +44,7 @@ class SessionsController < ApplicationController
     end
     user ||= User.find(@auth.user_id)
     log_in(user)
-    remeber(user)
+    remember(user)
     redirect_to you_path
   end
 
