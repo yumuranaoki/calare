@@ -98,13 +98,12 @@ Rails.application.configure do
   host = '54.65.64.54'
   config.action_mailer.default_url_options = { host: host }
   ActionMailer::Base.smtp_settings = {
-    :address        => 'smtp.sendgrid.net',
+    :address        => 'smtp.gmail.com',
+    :domain         => 'gmail.com',
     :port           => '587',
     :authentication => :plain,
-    :user_name      => ENV['SENDGRID_USERNAME'],
-    :password       => ENV['SENDGRID_PASSWORD'],
-    #awsで取得したドメイン
-    :domain         => '54.65.64.54',
+    :user_name      => ENV['GMAIL_ADDRESS'],
+    :password       => ENV['GMAIL_PASSWORD'],
     :enable_starttls_auto => true
   }
 

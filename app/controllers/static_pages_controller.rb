@@ -5,6 +5,7 @@ class StaticPagesController < ApplicationController
     end
   end
 
-  def react
+  def sendgrid
+    
   end
 end

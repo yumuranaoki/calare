@@ -85,9 +85,7 @@ Rails.application.routes.draw do
   resources :account_activations, only:[:edit]
   resources :password_resets, only:[:new, :edit, :update, :create]
 
-  #reactのtest用
-  get '/react', to: 'static_pages#react'
 
-
+  get '/sendgrid', to: 'static_pages#sendgrid'
   root 'static_pages#home'
 end
