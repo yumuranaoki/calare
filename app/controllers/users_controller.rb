@@ -30,7 +30,8 @@ class UsersController < ApplicationController
     @s_c = @submissions.count - 1
     if !current_user.google_calendars.empty?
       google_calendar = current_user.google_calendars.order(:id).first
-      google_calenar_authentification(google_calendar)
+      client = google_calenar_authentification(google_calendar)
+      logger.debug("clientのでででばっぐ：#{client}")
       service = Google::Apis::CalendarV3::CalendarService.new
       service.authorization = client
       check_sync(google_calendar)
@@ -86,14 +87,6 @@ class UsersController < ApplicationController
     end
     @submissions = current_user.followed_submissions
     @s_c = @submissions.count - 1
-    if !current_user.google_calendars.empty?
-      google_calendar = current_user.google_calendars.order(:id).first
-      google_calenar_authentification(google_calendar)
-      insert_calendar(google_calendar)
-      service = Google::Apis::CalendarV3::CalendarService.new
-      service.authorization = client
-      check_sync(google_calendar)
-    end
   end
 
   def invited

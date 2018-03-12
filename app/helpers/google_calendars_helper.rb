@@ -7,6 +7,8 @@ module GoogleCalendarsHelper
     client.update!(refresh_token: refresh_token)
     response = client.fetch_access_token!
     session[:authorization] = response
+    logger.debug("clientのデバッグ：#{client}")
+    return client
   end
 
   def insert_calendar(google_calendar, summary, starttime, endtime, id)
