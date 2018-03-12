@@ -9,6 +9,7 @@ $(document).on('turbolinks:load', function(){
     var path_id = path.split('/')[2];
     var test = [];
 
+    /*
     App.notification = App.cable.subscriptions.create({
       channel: "NotificationChannel"
     }, {
@@ -26,6 +27,7 @@ $(document).on('turbolinks:load', function(){
         })
       }
     })
+    */
 
 
     //function
@@ -366,7 +368,9 @@ $(document).on('turbolinks:load', function(){
               for(var i=0; i<l; i++){
               event_id += c[Math.floor(Math.random()*cl)];
               }
+              /*
               App.notification.speak('作成者', calEvent.start, calEvent.end);
+              */
               finishedFlag = true
               determine(calEvent.id, path_id, event_id, memberFlag);
             }
@@ -521,7 +525,9 @@ $(document).on('turbolinks:load', function(){
                 for(var i=0; i<l; i++){
                 event_id += c[Math.floor(Math.random()*cl)];
                 }
+                /*
                 App.notification.speak(name, calEvent.start, calEvent.end);
+                */
                 finishedFlag = true
                 console.log(finishedFlag)
                 determine(calEvent.id, path_id, event_id, memberFlag);
