@@ -1,7 +1,9 @@
 module GoogleCalendarsHelper
   def google_calenar_authentification(google_calendar)
     refresh_token = google_calendar.refresh_token
+    logger.debug("デバッグ:#{refresh_token}")
     client = Signet::OAuth2::Client.new(client_options)
+    logger.debug("デバッグ:#{client}")
     client.update!(refresh_token: refresh_token)
     response = client.fetch_access_token!
     session[:authorization] = response
@@ -20,7 +22,7 @@ module GoogleCalendarsHelper
   def check_sync(google_calendar)
     if !google_calendar.sync
       redirect_to list_part_url
-    else 
+    else
       google_calendar.update(sync: false)
     end
   end
