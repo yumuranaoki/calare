@@ -5,7 +5,7 @@ class StaticPagesController < ApplicationController
     end
   end
 
-  def sendgrid
+  def question
     
   end
 end

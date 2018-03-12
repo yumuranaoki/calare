@@ -240,13 +240,11 @@ $(document).on('turbolinks:load', function(){
         },
 
         eventClick: function(calEvent) {
-          if ( confirm('are you sure to delete?') ) {
-            $('#calendar').fullCalendar('removeEvents', calEvent.id );
-            var del_num = 2*calEvent.id;
-            test[del_num]=null;
-            test[(del_num+1)]=null;
-            console.log(test);
-          }
+          $('#calendar').fullCalendar('removeEvents', calEvent.id );
+          var del_num = 2*calEvent.id;
+          test[del_num]=null;
+          test[(del_num+1)]=null;
+          console.log(test);
         },
         selectable: true,
         selectHelper: true,
@@ -352,13 +350,13 @@ $(document).on('turbolinks:load', function(){
           console.log(expiredFlag)
           console.log(answeredFlag)
           if (!answeredFlag) {
-            if (confirm("are you sure to delete?")) {
+            if (confirm("本当に消しますか？")) {
               delete_from_submission(calEvent.id, path_id)
               $('#calendar').fullCalendar('removeEvents', calEvent.id );
             }
           } else if (anseweredFlag && expiredFlag && memberFlag && !finishedFlag) {
             //締め切っていて複数人向けのグループなら、作成者のクリックで決定
-            if (confirm('are you sure to pick this')) {
+            if (confirm('本当にこの日程でよろしいですか？')) {
               calEvent.color = "rgb(214, 76, 97)"
               $('#calendar').fullCalendar('updateEvent', calEvent);
               var l = 25;
@@ -511,7 +509,7 @@ $(document).on('turbolinks:load', function(){
         eventClick: function(calEvent) {
           //２人ページ
           if (!memberFlag) {
-            if ( confirm('are you sure to pick this?') ) {
+            if ( confirm('本当にこの日程でよろしいですか？') ) {
               $("#input-modal").modal("show");
               $("#title-button").on("click", function(){
                 var name = $("#title-input").val();
@@ -613,6 +611,13 @@ $(document).on('turbolinks:load', function(){
       })
     });
 
+    //resetに関する
+    $("#reset").on("click", function(){
+      $('#calendar').fullCalendar('removeEvents');
+      $('#calendar').fullCalendar('addEventSource', "/events.json");
+      test = [];
 
+
+    })
 
 });

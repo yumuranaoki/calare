@@ -9,7 +9,7 @@ class SubmissionsController < ApplicationController
     if Rails.env.development?
       @link = 'http://localhost:3000/s/' + @access_id
     elsif Rails.env.production?
-      @link = 'https://calare.herokuapp.com//s/' + @access_id
+      @link = 'https://www.calare-schedule.com/s/' + @access_id
     end
     @title = params[:title]
     submission = current_user.submissions.create(title: @title, access_id: @access_id, more_than_two: params[:radio_val])
@@ -216,7 +216,7 @@ class SubmissionsController < ApplicationController
   end
 
   private
-  
+
     def client_options
       {
       client_id: Rails.application.secrets.google_client_id,

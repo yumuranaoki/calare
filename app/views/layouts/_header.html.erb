@@ -31,6 +31,11 @@
             <li><div id="react-question"></div></li>
           -->
 
+            <li id="question">
+              <%= link_to question_path, remote: true do %>
+                <%= fa_icon("question", class: "question") %>
+              <% end %>
+            </li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <%= fa_icon("bell", class: "notification") %> <b class="caret"></b>

@@ -55,7 +55,7 @@ class Form extends React.Component {
     return(
       <MuiThemeProvider>
         <Dialog
-          title="google calendarから予定調整"
+          title="範囲を選択して日程調整"
           modal={true}
           open={this.props.isOpen}
           actions={actions}

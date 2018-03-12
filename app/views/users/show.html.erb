@@ -4,8 +4,8 @@
 
   <div style="margin-bottom: 30px;" >
 
-    <div class = "row">
-      <div class = "col-sm-2 only-pc" style="margin-top: 170px;">
+    <div class="row">
+      <div class = "col-sm-2 only-pc" style="margin-top: 140px;">
         <div class="btn-group" data-toggle="buttons">
           <label class="btn btn-default active radio-button">
             <input type="radio" autocomplete="off" name="member" value=false checked> ２人の日程を調整
@@ -14,24 +14,22 @@
             <input type="radio" autocomplete="off" name="member" value=true> ３人以上の日程調整
           </label>
         </div>
-        <button id="submission" class="btn btn-primary">日程を調整！</button>
+        <button id="submission" class="btn btn-primary calendar-button higher">日程を調整！</button>
+        <button id="reset" class="btn btn-primary calendar-button lower">リセット</button>
       </div>
       <div class = "col-sm-9 col-sm-offset-1">
         <div id="calendar"></div>
       </div>
     </div>
 
-    <h2>Group</h1>
+    <h2 class="event-index"><%= @user.name %>さんが作成したイベント</h1>
 
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs" style="margin-bottom: 30px;">
         <li class="nav-item active"><%= link_to "my groups", you_path %></li>
         <li class="nav-item"><%= link_to "Participating groups", participating_path, class: "active" %></li>
         <!-- <li class="nav-item"><%= link_to "Invited groups", invited_path %></li> -->
     </ul>
 
-
-
-    <h2>my groups</h2>
     <table class="table">
       <thead>
         <tr>

@@ -12,7 +12,7 @@
     <%= javascript_pack_tag 'application' %>
     <%= render 'layouts/shim' %>
   </head>
-  
+
   <body>
     <%= render 'layouts/header' %>
 
@@ -20,21 +20,24 @@
         <div id="floating-actionbutton"></div>
       <% end %>
 
-      <div class="container grey">
+      <div class="container gray">
 
         <div class="row">
           <div class="col-sm-6 col-sm-offset-3">
-          <% flash.each do |message_type, message| %>
-            <div class = "alert alert-<%= message_type %>"><%= message %></div>
-          <% end %>
+            <% flash.each do |message_type, message| %>
+              <div class = "alert alert-<%= message_type %>"><%= message %></div>
+            <% end %>
+          </div>
+
+          <div style="padding: 30px 0 0 25px;">
+            <%= yield %>
+          </div>
+
         </div>
 
-        <div style="padding-top: 30px;">
-          <%= yield %>
-        </div>
-
-        <%= render 'layouts/footer' %>
       </div>
+
+    <%= render 'layouts/footer' %>
 
       <!-- ここにmodelのタグを表示 -->
       <div id="form-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

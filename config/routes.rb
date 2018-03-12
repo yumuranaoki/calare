@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-
-
   get 'password_resets/new'
   get 'password_resets/edit'
   get 'user_relations/show'
@@ -12,7 +10,6 @@ Rails.application.routes.draw do
   get '/login', to: 'sessions#new'
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
-
 
   resources :users, except:[:show, :new, :create] do
     member do
@@ -80,12 +77,9 @@ Rails.application.routes.draw do
   post '/createevent', to: 'events#create_event'
   patch '/editevent', to: 'events#edit_event'
 
-
-
   resources :account_activations, only:[:edit]
   resources :password_resets, only:[:new, :edit, :update, :create]
 
-
-  get '/sendgrid', to: 'static_pages#sendgrid'
+  get '/question', to: 'static_pages#question'
   root 'static_pages#home'
 end
