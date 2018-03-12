@@ -24,47 +24,12 @@
             <% if current_user.google_calendars.empty? %>
               <li><%= link_to "google calendarと連携", redirect_path %></li>
             <% end %>
-            <!--
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                グループ <b class="caret"></b>
-              </a>
-              <ul class="dropdown-menu">
-                <li><%= link_to "参加中のグループ", participating_path %></li>
-                <li><%= link_to "招待されているグループ", invited_path %></li>
-              </ul>
-            </li>
-            -->
-            <!--
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                ユーザー <b class="caret"></b>
-              </a>
-              <ul class="dropdown-menu">
-                <li><%= link_to "フォロー中のユーザー", following_user_path(current_user.id) %></li>
-                <li><%= link_to "フォローされているユーザー", followers_user_path(current_user.id) %></li>
-                <li><%= link_to "ユーザーを探す", users_path %></li>
-              </ul>
-            </li>
-            -->
-            <!--
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <%= current_user.name %> <b class="caret"></b>
-              </a>
-              <ul class="dropdown-menu">
-                <li><%= link_to "My page", user_path(current_user.id) %></li>
-                <li><%= link_to "Settings", edit_user_path(current_user.id) %></li>
-                <li class="divider"></li>
-                <li>
-                  <%= link_to "Log out", logout_path, method: :delete %>
-                </li>
-              </ul>
-            </li>
-            -->
 
+          <!-- reactで作成する準備ができれば
             <li><div id="react-notification"></div></li>
             <li><div id="react-setting"></div></li>
+            <li><div id="react-question"></div></li>
+          -->
 
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">

@@ -7,7 +7,6 @@ import SelectTime from './selecttime'
 class DetailForm extends React.Component {
 
   handleSecondSubmit = () => {
-    console.log(this.props.eventId)
     let data = {title: this.props.title,
                 startdate: this.props.startdate,
                 starttime: this.props.starttime,

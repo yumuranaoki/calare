@@ -79,6 +79,12 @@ body > .grey{
   margin-right: auto;
 }
 
+@media screen and (max-width: 750px) {
+  .only-pc {
+    display: none;
+  }
+}
+
 /*     header     */
 #logo{
   font-size: 3.2em;
@@ -123,9 +129,9 @@ body > .grey{
 
 #floating-actionbutton {
   position: fixed;
-  z-index: 1;
-  top: 75px;
-  right: 35px;
+  z-index: 10000;
+  bottom: 30px;
+  right: 30px;
 }
 
 /*     footer     */
@@ -239,6 +245,17 @@ input, textarea, select, .uneditable-input {
 .user-name {
   margin-right: 100px;
   font-size: 1.6em;
+}
+
+.radio-button {
+  width: 150px;
+  margin-bottom: 5px;
+}
+
+#submission {
+  width: 130px;
+  margin-top: 40px;
+  margin-left: 10px;
 }
 
 /*    modal form   */

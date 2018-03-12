@@ -5,6 +5,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 
 class ButtonForForm extends React.Component {
   render() {
+
     return(
       <MuiThemeProvider>
         <FloatingActionButton onClick={this.props.handlePlus}>
