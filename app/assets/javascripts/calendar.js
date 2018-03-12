@@ -1,13 +1,13 @@
 var num = 0;
 var nump = 10000;
 var tmp_str = '';
-var test = [];
 
 $(document).on('turbolinks:load', function(){
 
     var path = location.pathname;
     var path_next = path.split('/')[1];
     var path_id = path.split('/')[2];
+    var test = [];
 
     App.notification = App.cable.subscriptions.create({
       channel: "NotificationChannel"
