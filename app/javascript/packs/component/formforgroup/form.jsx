@@ -18,8 +18,8 @@ class Form extends React.Component {
       let cl = c.length;
       let eventId = "";
       for(let i=0; i<l; i++){
-      eventId += c[Math.floor(Math.random()*cl)];
-    }
+        eventId += c[Math.floor(Math.random()*cl)];
+      }
     let data = {startdate: startdateVal, enddate: enddateVal, title: title, multi: multi, eventId: eventId}
     console.log(data["eventId"])
     this.props.handleSubmit(data)

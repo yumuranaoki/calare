@@ -1,6 +1,8 @@
 class ApiController < ApplicationController
-  include GoogleCalendarsHelper  
+  include GoogleCalendarsHelper
   def receivetime
+    logger.debug("デバッグ：received!!!")
+    logger.debug("デバッグ：#{params}")
     starttime = params[:starttime]
     endtime = params[:endtime]
     #受け取ったstarttime,endtimeを"--:--"の文字列にする
@@ -110,8 +112,6 @@ class ApiController < ApplicationController
                     result.each do |r|
                       submission.detail_dates.create!(starttime: starttime.since(r[0]*30.minutes), endtime: starttime.since(r[1]*30.minutes))
                     end
-
-
     end
     current_user.follow_submission(submission)
   end

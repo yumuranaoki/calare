@@ -43,7 +43,8 @@ export const afterHandleSecondSubmit = () => {
 export const handleSecondSubmit = (data) => {
   return dispatch => {
     const csrfToken = document.getElementsByName('csrf-token').item(0).content;
-    fetch('http://localhost:3000/time', {
+    const
+    fetch('https://www.calare-schedule.com/time', {
       method: 'POST',
       credentials: 'same-origin',
       headers: {
@@ -53,7 +54,7 @@ export const handleSecondSubmit = (data) => {
       body: JSON.stringify(data),
     })
     .then(() => dispatch(afterHandleSecondSubmit()))
-    //errorのmodal    
+    //errorのmodal
   }
 }
 

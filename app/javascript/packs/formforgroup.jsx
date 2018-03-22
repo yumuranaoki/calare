@@ -4,7 +4,6 @@ import FormForGroupConnected from './container/formforgroup';
 import store from './store/formforgroup';
 import {Provider} from 'react-redux';
 
-
 document.addEventListener('turbolinks:load', () => {
   ReactDOM.render(
     <Provider store={store}>
