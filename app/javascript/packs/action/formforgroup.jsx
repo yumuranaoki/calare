@@ -43,7 +43,6 @@ export const afterHandleSecondSubmit = () => {
 export const handleSecondSubmit = (data) => {
   return dispatch => {
     const csrfToken = document.getElementsByName('csrf-token').item(0).content;
-    const
     fetch('https://www.calare-schedule.com/time', {
       method: 'POST',
       credentials: 'same-origin',
